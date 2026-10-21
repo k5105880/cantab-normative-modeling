@@ -1,6 +1,6 @@
 # CANTAB normative modeling
 
-R code for preparing CANTAB data, fitting reference models in healthy controls, and expressing each assessment as a **normative z score**. Scores express a value's position in the predicted distribution; see the [interpretation guide](docs/USAGE.md). Positive scores indicate higher raw performance values; the interpretation depends on the outcome. [日本語](README_JA.md)
+R code for preparing CANTAB data, fitting reference models in healthy controls, and expressing each assessment as a **normative z score**. Scores express a value's position in the predicted distribution; see the [interpretation guide](docs/USAGE.md). Positive scores indicate higher raw performance values; the interpretation depends on the outcome. 
 
 ## Start here
 
