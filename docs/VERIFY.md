@@ -1,6 +1,6 @@
 # Software checks and limits
 
-## Run checks from R
+## Run the checks
 
 From the repository root:
 
@@ -9,34 +9,18 @@ source("scripts/run_tests.R")
 source("scripts/verify_release.R")
 ```
 
-The test runner covers CSV creation, malformed-input rejection, participant-ID preservation, age derivation, numerical score calculations, grouped folds, model design, output assembly, execution and resume guards. Common result-export tests verify all six schemas, exact score text, participant IDs, row identity, reference-model routing, precision checks and protection of edited results. Input preparation ignores unrelated export fields, and the tests verify that these fields do not alter score eligibility. The tests use synthetic fixtures and do not fit production models.
+`run_tests.R` runs the 43 scripts listed in [test_files.txt](../scripts/test_files.txt). They use synthetic fixtures to check input preparation and validation, participant identifiers, grouped cross-validation, model design, probability and score calculations, output assembly, execution isolation, and resume guards. They do not fit production models.
 
-The release verifier compares the file inventory and SHA-256 hashes and parses every R source file. Run it on a pristine release. Version control's `.git` directory is ignored. The complete list of additional tests is in `scripts/test_files.txt`. Model-design tests construct synthetic inputs by default; optional input arguments allow the same checks on a separately supplied dataset.
+`verify_release.R` checks the complete file inventory, file sizes, SHA-256 hashes and R source syntax against the supplied manifests. Run it on an unmodified distribution; `.git/` is ignored. Missing files or local edits cause a failure. An integrity failure concerns the distributed files and does not by itself establish an error in the statistical calculations.
 
-## Validation scope
+## Verified scope
 
-All six R entry points have passed no-MCMC input, model-design and Stan-syntax checks. Tests also cover input without optional reference files, numeric-looking identifiers, the 14-column input schema, and source/output paths containing spaces. The [validation report](../provenance/validation_report.json) records these checks and their dates.
+The last full software validation passed all 43 tests and all six entry points in `mode = "check"`, including input, model-design and Stan-syntax checks without MCMC. These checks were performed for version `2026.10.21-r8`. Subsequent documentation and packaging revisions leave the executable analysis code and model settings unchanged. The current distribution is checked separately for file integrity, documentation links and R example syntax.
 
-The available execution host used Linux. Native Windows and macOS were not available for execution tests. CmdStan and a compatible C++ toolchain are required for fitting on every operating system.
+Model validation also included comparisons of formulas, priors, generated Stan code and Stan data for the full-control fit and all five training folds. Deterministic numerical calculations, available saved synthetic-fit predictions and completed score exports were compared. The [validation record](../provenance/validation_report.json) distinguishes these earlier checks from checks performed for the current distribution.
 
-Model definitions were compared before and after source reorganization: formulas, prior contents, generated Stan code and Stan data were checked for the full-control model and all five training folds. Deterministic numerical checks and available saved synthetic-fit predictions were compared without refitting production models. Completed score tables were also used to verify exact score text, participant IDs and row order through the shared exporter.
+## Limits and checks for your data
 
-Regression tests cover unused participant-factor levels in automatic fold assignment, cohorts containing only healthy controls, isolation of R session settings, and output directories accessed through symbolic links. These are software edge cases; corrected automatic folds must be generated in a fresh run. The validation report distinguishes unchanged model calculations from these execution fixes.
+Full production MCMC was not rerun for these distribution revisions, and the packaged tests do not establish posterior convergence or reproduce a complete fitted analysis. Saved synthetic fits test calculation consistency, not production convergence. Execution was checked on Linux; native Windows and macOS were not available for testing.
 
-## Configuration and usability checks
-
-The latest full validation passed all 43 public test scripts and all six no-MCMC entry-point checks, including restoration of the caller environment. This documentation revision leaves the executable analysis code and its defaults unchanged. Documentation links and R example syntax were checked again.
-
-The active settings were traced to their use, and their remaining default values were compared. Removing ineffective draw-selection settings from movement/latency preserved full-reference z values and complete held-out prediction objects in saved synthetic-fit comparisons. These short fits test arithmetic equivalence; they do not establish production convergence. Model definitions, priors and sampling/recovery values remain unchanged. The settings and diagnostics guides are provided in English and Japanese; local links, code fences and R example syntax were checked.
-
-Configuration checks reject unknown, duplicate, missing and incorrectly typed A′ settings before analysis. Reference tests verify unique fold-file selection, unchanged cohort labels and copied-fold hashes. Assembly tests retain ineligible rows whose platform has no eligible controls, while continuing to reject scored rows without that support. A′ prepared numerical inputs and all six full/held-out Stan datasets were compared after the cleanup.
-
-CSV structure tests reject unclosed quotations, mismatched field counts and blank records before creating an analysis input. Valid quoted cells, Unicode, UTF-8 BOM, CRLF line endings and a missing final newline remain supported. The documented export-to-input workflow was executed in the `project/working_directory/` layout. Valid input tables and constructed CSVs were compared with the previous release without changing model calculations.
-
-Diagnosis values are HC, MDD and BD throughout input validation, reference-cohort selection and results. Tests verify correct control/patient score routing and unchanged output labels for all six outcomes. Prepared numerical values, eligibility and row selections were compared with the preceding release after accounting for diagnosis spelling; A′ automatic folds were also identical. The IQ documentation distinguishes an estimated IQ value from the reading test used to obtain it; the FSIQ column and its numerical transformation are unchanged.
-
-## Evaluating your fitted model
-
-Input and software checks do not establish model suitability. For each fitted run, inspect convergence diagnostics, score precision and held-out calibration, and evaluate whether the covariate ranges and supported design match your data. Full production MCMC is not part of the packaged test suite. A new set of participants or folds requires a new run; resume only with unchanged input, code, software and settings.
-
-The repository includes schema templates, synthetic examples and code.
+For each fitted run, inspect convergence, score precision and held-out calibration using the [diagnostic guide](DIAGNOSTICS.md). Assess whether the covariate ranges and model design match your data. Input validation and passing software tests do not establish model suitability. Resume only with unchanged input, code, software and settings.

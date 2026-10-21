@@ -6,7 +6,7 @@ The measure is `RVP_Median_latency` in the input CSV (ms). Higher scores mean po
 
 ## Prepare and run
 
-Read the [input guide](../docs/DATA.md) ([日本語](../docs/DATA_JA.md)), complete [environment setup](../environment/README.md), and use the [execution/settings/result guide](../docs/USAGE.md) ([日本語](../docs/USAGE_JA.md)).
+Read the [input guide](../docs/DATA.md), complete [environment setup](../environment/README.md), and use the [execution/settings/result guide](../docs/USAGE.md).
 
 First create the completed input CSV using the input guide. From `project/working_directory/` (the repository root):
 
@@ -25,7 +25,7 @@ run_cantab("RVP_latency", input, "../output/RVP_latency_fit", mode = "resume")
 
 Open **`normative_scores.csv`** in the specified output directory. Its **`normative_z`** column is the normative z score for each assessment. `raw_score` retains the input value; `score_status` identifies rows with a usable score. `score_dictionary.csv` explains all columns, and `analysis_summary.txt` gives the model and score direction.
 
-Eligible healthy controls are scored with participant-held-out cross-validation. Other participants use the model fitted to all eligible healthy controls. All selected analysis rows are preserved, including those without a score. With the default `reference_dir = NULL`, these are all original input rows; an optional cohort selection excludes unlisted participants before scoring. Use the [diagnostic guide](../docs/DIAGNOSTICS.md) ([日本語](../docs/DIAGNOSTICS_JA.md)) for exact log/result paths and interpretation of the model checks.
+Eligible healthy controls are scored with participant-held-out cross-validation. Other participants use the model fitted to all eligible healthy controls. All selected analysis rows are preserved, including those without a score. With the default `reference_dir = NULL`, these are all original input rows; an optional cohort selection excludes unlisted participants before scoring. Use the [diagnostic guide](../docs/DIAGNOSTICS.md) for exact log/result paths and interpretation of the model checks.
 
 ## Default model settings
 
@@ -34,7 +34,7 @@ Eligible healthy controls are scored with participant-held-out cross-validation.
 - Five-fold cross-validation; each fit: 3000 total iterations including 1000 warmup per chain.
 - Sampler target acceptance (`adapt_delta`): 0.999; maximum tree depth: 20.
 
-[Model metadata](provenance/model.json) describes the defaults; it is documentation, not a user configuration file. The [model settings guide](../docs/SETTINGS.md) ([日本語](../docs/SETTINGS_JA.md)) explains the formulas, priors, data-dependent rules and recovery attempts.
+[Model metadata](provenance/model.json) describes the defaults; it is documentation, not a user configuration file. The [model settings guide](../docs/SETTINGS.md) explains the formulas, priors, data-dependent rules and recovery attempts.
 
 Advanced implementation references:
 

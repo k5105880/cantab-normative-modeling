@@ -1,6 +1,6 @@
 # Reading run status and model diagnostics
 
-Start with the [execution guide](USAGE.md). This page identifies the files to inspect after `check`, during a long run, or before interpreting fitted scores. [日本語](DIAGNOSTICS_JA.md)
+Start with the [execution guide](USAGE.md). This page identifies the files to inspect after `check`, during a long run, or before interpreting fitted scores.
 
 Every path below is relative to the `output_dir` supplied to `run_cantab()`. Files appear as their stages finish: a `check` run has no posterior convergence results or normative scores, and an interrupted run may not yet have an aggregate diagnostic table.
 

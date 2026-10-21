@@ -1,6 +1,6 @@
 # CANTAB normative modeling
 
-R code for preparing CANTAB data, fitting reference models in healthy controls, and expressing each assessment as a **normative z score**. Scores express a value's position in the predicted distribution; see the [interpretation guide](docs/USAGE.md). Positive scores indicate higher raw performance values; the interpretation depends on the outcome. 
+R code for preparing CANTAB data, fitting reference models in healthy controls, and expressing each assessment as a **normative z score**. Scores express a value's position in the predicted distribution; see the [interpretation guide](docs/USAGE.md). Positive scores indicate higher raw performance values; the interpretation depends on the outcome.
 
 ## Start here
 
@@ -44,7 +44,7 @@ All six outcomes use the same main result name, **`normative_scores.csv`**, insi
 
 Change the outcome argument to another folder name in the table. The editable [R example](examples/run_one_outcome.R) collects the user settings in one place. For interrupted runs, see the guide's `resume` instructions.
 
-## Examples, checks and license
+## Examples and checks
 
 ```r
 source("data/example/create_example.R") # practice creating the CSV using synthetic records
@@ -52,5 +52,12 @@ source("scripts/run_tests.R")          # software tests; no production model fit
 source("scripts/verify_release.R")     # integrity check for an unchanged release
 ```
 
-The small synthetic example demonstrates the input format; it is not suitable for fitting these models. See [validation scope](docs/VERIFY.md) and [implementation notes](docs/PROVENANCE.md). The code uses the [MIT License](LICENSE); software citation information is in [CITATION.cff](CITATION.cff).
+The small synthetic example demonstrates the input format; it is not suitable for fitting these models. See [validation scope](docs/VERIFY.md) and [implementation notes](docs/PROVENANCE.md).
 
+## Citation
+
+Cite the software version used, with the author and repository details in [CITATION.cff](CITATION.cff).
+
+## License
+
+The code is distributed under the [MIT License](LICENSE). Dependencies retain their own licenses; their source and binaries are not redistributed here. The software license does not grant access to participant data or rights to the CANTAB product or test materials.

@@ -6,7 +6,7 @@ The measure is `RTI_Median_five-choice_reaction_time` in the input CSV (ms). Hig
 
 ## Prepare and run
 
-Read the [input guide](../docs/DATA.md) ([日本語](../docs/DATA_JA.md)), complete [environment setup](../environment/README.md), and use the [execution/settings/result guide](../docs/USAGE.md) ([日本語](../docs/USAGE_JA.md)).
+Read the [input guide](../docs/DATA.md), complete [environment setup](../environment/README.md), and use the [execution/settings/result guide](../docs/USAGE.md).
 
 First create the completed input CSV using the input guide. From `project/working_directory/` (the repository root):
 
@@ -25,7 +25,7 @@ run_cantab("RTI_reaction", input, "../output/RTI_reaction_fit", mode = "resume")
 
 Open **`normative_scores.csv`** in the specified output directory. Its **`normative_z`** column is the normative z score for each assessment. `raw_score` retains the input value; `score_status` identifies rows with a usable score. `score_dictionary.csv` explains all columns, and `analysis_summary.txt` gives the model and score direction.
 
-Eligible healthy controls are scored with participant-held-out cross-validation. Other participants use the model fitted to all eligible healthy controls. All selected analysis rows are preserved, including those without a score. With the default `reference_dir = NULL`, these are all original input rows; an optional cohort selection excludes unlisted participants before scoring. Use the [diagnostic guide](../docs/DIAGNOSTICS.md) ([日本語](../docs/DIAGNOSTICS_JA.md)) for exact log/result paths and interpretation of the model checks.
+Eligible healthy controls are scored with participant-held-out cross-validation. Other participants use the model fitted to all eligible healthy controls. All selected analysis rows are preserved, including those without a score. With the default `reference_dir = NULL`, these are all original input rows; an optional cohort selection excludes unlisted participants before scoring. Use the [diagnostic guide](../docs/DIAGNOSTICS.md) for exact log/result paths and interpretation of the model checks.
 
 ## Default model settings
 
@@ -39,7 +39,7 @@ The mean includes nonlinear baseline age and elapsed time, gender, baseline IQ, 
 
 Normative percentiles integrate over the effects of a new participant. They use all ordered posterior draws and preserve log-scale tail probabilities. Numerical integration checks the z score and log density at increasing quadrature orders; the posterior Monte Carlo standard error of z must not exceed 0.03.
 
-[Model metadata](provenance/model.json) describes the defaults; it is documentation, not a user configuration file. The [model settings guide](../docs/SETTINGS.md) ([日本語](../docs/SETTINGS_JA.md)) explains the formulas, priors, data-dependent rules and recovery attempts.
+[Model metadata](provenance/model.json) describes the defaults; it is documentation, not a user configuration file. The [model settings guide](../docs/SETTINGS.md) explains the formulas, priors, data-dependent rules and recovery attempts.
 
 Advanced implementation references:
 

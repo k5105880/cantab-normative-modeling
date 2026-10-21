@@ -1,264 +1,251 @@
 {
   "date": "2026-10-21",
-  "version": "2026.10.21-r11",
+  "version": "2026.10.21-r12",
   "scope": "Six outcome-specific normative modeling workflows in R",
   "current_R_source_files": 138,
-  "public_test_scripts": [
-    {
-      "path": "tests/test_input_data.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RTI_movement/test_fold_basis.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RTI_movement/test_identifiability.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RTI_movement/test_pipeline.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RTI_movement/test_portable_input.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RTI_movement/test_source_isolation.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RTI_movement/test_state_cdf.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RTI_reaction/test_cdf.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RTI_reaction/tests/test_grouped_folds.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RTI_reaction/tests/test_healthy_only.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RTI_reaction/tests/test_portable_launcher.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RTI_reaction/tests/test_portable_normative_export.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RTI_reaction/tests/test_time_identifiability.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_A_prime/tests/test_config.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_A_prime/tests/test_models.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_A_prime/tests/test_portable_pipeline.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_A_prime/tests/test_precision.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_A_prime/tests/test_prepare.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_A_prime/tests/test_reference_folds.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_A_prime/tests/test_source_isolation.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_A_prime/tests/test_time_identifiability.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_latency/test_fold_basis.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_latency/test_identifiability.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_latency/test_pipeline.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_latency/test_source_isolation.R",
-      "status": "PASS"
-    },
-    {
-      "path": "RVP_latency/test_state_cdf.R",
-      "status": "PASS"
-    },
-    {
-      "path": "SWM_Between_errors/tests/test_design.R",
-      "status": "PASS"
-    },
-    {
-      "path": "SWM_Between_errors/tests/test_normative_workflow.R",
-      "status": "PASS"
-    },
-    {
-      "path": "SWM_Between_errors/tests/test_raw_export.R",
-      "status": "PASS"
-    },
-    {
-      "path": "SWM_Between_errors/tests/test_source_safety.R",
-      "status": "PASS"
-    },
-    {
-      "path": "SWM_Between_errors/tests/test_state_offset.R",
-      "status": "PASS"
-    },
-    {
-      "path": "SWM_Between_errors/tests/test_state_precision.R",
-      "status": "PASS"
-    },
-    {
-      "path": "SWM_Strategy/tests/test_design.R",
-      "status": "PASS"
-    },
-    {
-      "path": "SWM_Strategy/tests/test_raw_export.R",
-      "status": "PASS"
-    },
-    {
-      "path": "SWM_Strategy/tests/test_runtime.R",
-      "status": "PASS"
-    },
-    {
-      "path": "SWM_Strategy/tests/test_state_precision.R",
-      "status": "PASS"
-    },
-    {
-      "path": "SWM_Strategy/tests/test_state_tails.R",
-      "status": "PASS"
-    },
-    {
-      "path": "tests/test_output_paths.R",
-      "status": "PASS"
-    },
-    {
-      "path": "tests/test_results.R",
-      "status": "PASS"
-    },
-    {
-      "path": "tests/test_config_source_safety.R",
-      "status": "PASS"
-    },
-    {
-      "path": "tests/test_csv_structure.R",
-      "status": "PASS"
-    },
-    {
-      "path": "tests/test_single_core.R",
-      "status": "PASS"
-    },
-    {
-      "path": "tests/test_diagnosis_labels.R",
-      "status": "PASS"
-    }
-  ],
-  "entrypoint_checks": [
-    {
-      "outcome": "RTI_reaction",
-      "mode": "check",
-      "status": "PASS",
-      "production_sampling": false
-    },
-    {
-      "outcome": "RTI_movement",
-      "mode": "check",
-      "status": "PASS",
-      "production_sampling": false
-    },
-    {
-      "outcome": "RVP_A_prime",
-      "mode": "check",
-      "status": "PASS",
-      "production_sampling": false
-    },
-    {
-      "outcome": "RVP_latency",
-      "mode": "check",
-      "status": "PASS",
-      "production_sampling": false
-    },
-    {
-      "outcome": "SWM_Between_errors",
-      "mode": "check",
-      "status": "PASS",
-      "production_sampling": false
-    },
-    {
-      "outcome": "SWM_Strategy",
-      "mode": "check",
-      "status": "PASS",
-      "production_sampling": false
-    }
-  ],
-  "model_comparisons": {
-    "status": "PASS",
-    "scope": "full healthy-control model and five training folds for all six outcomes",
-    "preserved": [
-      "model formulas",
-      "prior contents",
-      "generated Stan code",
-      "Stan data",
-      "valid existing fold assignments",
-      "sampling seeds",
-      "initial and recovery settings"
+  "last_full_software_validation": {
+    "version": "2026.10.21-r8",
+    "date": "2026-10-21",
+    "public_test_scripts": [
+      {
+        "path": "tests/test_input_data.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RTI_movement/test_fold_basis.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RTI_movement/test_identifiability.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RTI_movement/test_pipeline.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RTI_movement/test_portable_input.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RTI_movement/test_source_isolation.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RTI_movement/test_state_cdf.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RTI_reaction/test_cdf.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RTI_reaction/tests/test_grouped_folds.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RTI_reaction/tests/test_healthy_only.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RTI_reaction/tests/test_portable_launcher.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RTI_reaction/tests/test_portable_normative_export.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RTI_reaction/tests/test_time_identifiability.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_A_prime/tests/test_config.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_A_prime/tests/test_models.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_A_prime/tests/test_portable_pipeline.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_A_prime/tests/test_precision.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_A_prime/tests/test_prepare.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_A_prime/tests/test_reference_folds.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_A_prime/tests/test_source_isolation.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_A_prime/tests/test_time_identifiability.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_latency/test_fold_basis.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_latency/test_identifiability.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_latency/test_pipeline.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_latency/test_source_isolation.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_latency/test_state_cdf.R",
+        "status": "PASS"
+      },
+      {
+        "path": "SWM_Between_errors/tests/test_design.R",
+        "status": "PASS"
+      },
+      {
+        "path": "SWM_Between_errors/tests/test_normative_workflow.R",
+        "status": "PASS"
+      },
+      {
+        "path": "SWM_Between_errors/tests/test_raw_export.R",
+        "status": "PASS"
+      },
+      {
+        "path": "SWM_Between_errors/tests/test_source_safety.R",
+        "status": "PASS"
+      },
+      {
+        "path": "SWM_Between_errors/tests/test_state_offset.R",
+        "status": "PASS"
+      },
+      {
+        "path": "SWM_Between_errors/tests/test_state_precision.R",
+        "status": "PASS"
+      },
+      {
+        "path": "SWM_Strategy/tests/test_design.R",
+        "status": "PASS"
+      },
+      {
+        "path": "SWM_Strategy/tests/test_raw_export.R",
+        "status": "PASS"
+      },
+      {
+        "path": "SWM_Strategy/tests/test_runtime.R",
+        "status": "PASS"
+      },
+      {
+        "path": "SWM_Strategy/tests/test_state_precision.R",
+        "status": "PASS"
+      },
+      {
+        "path": "SWM_Strategy/tests/test_state_tails.R",
+        "status": "PASS"
+      },
+      {
+        "path": "tests/test_output_paths.R",
+        "status": "PASS"
+      },
+      {
+        "path": "tests/test_results.R",
+        "status": "PASS"
+      },
+      {
+        "path": "tests/test_config_source_safety.R",
+        "status": "PASS"
+      },
+      {
+        "path": "tests/test_csv_structure.R",
+        "status": "PASS"
+      },
+      {
+        "path": "tests/test_single_core.R",
+        "status": "PASS"
+      },
+      {
+        "path": "tests/test_diagnosis_labels.R",
+        "status": "PASS"
+      }
     ],
-    "notes": [
-      "Function environments can differ after runtime isolation; formulas, prior contents, distribution links and model data were compared directly.",
-      "Automatic fold creation now drops unused factor levels before assigning groups. Where the old algorithm failed on unused levels, its comparison input was explicitly normalized with droplevels; supplied valid folds were unchanged.",
-      "The r4 usability revision retains model definitions, priors, sampling and recovery values. Active configuration defaults were compared; only eight redundant or ineffective continuous-outcome setting declarations were removed.",
-      "The r5 readiness revision retains all model definitions, priors and default numerical/sampling values. A-prime prepared model columns, generated and supplied folds, and full/five-fold Stan data were compared exactly against r4; only unused historical audit columns were removed."
+    "entrypoint_checks": [
+      {
+        "outcome": "RTI_reaction",
+        "mode": "check",
+        "status": "PASS",
+        "production_sampling": false
+      },
+      {
+        "outcome": "RTI_movement",
+        "mode": "check",
+        "status": "PASS",
+        "production_sampling": false
+      },
+      {
+        "outcome": "RVP_A_prime",
+        "mode": "check",
+        "status": "PASS",
+        "production_sampling": false
+      },
+      {
+        "outcome": "RVP_latency",
+        "mode": "check",
+        "status": "PASS",
+        "production_sampling": false
+      },
+      {
+        "outcome": "SWM_Between_errors",
+        "mode": "check",
+        "status": "PASS",
+        "production_sampling": false
+      },
+      {
+        "outcome": "SWM_Strategy",
+        "mode": "check",
+        "status": "PASS",
+        "production_sampling": false
+      }
     ],
-    "comparison_release": "2026.10.21-r3"
+    "production_MCMC": false,
+    "subsequent_changes": "Documentation, example comments, citation and distribution metadata only; executable analysis expressions and model settings are unchanged."
   },
-  "numerical_and_export_checks": {
-    "status": "PASS",
+  "earlier_model_and_numerical_checks": {
+    "scope": "All six outcomes; full healthy-control models and all five training folds",
     "checks": [
-      "deterministic probability and precision calculations",
-      "available saved synthetic-fit predictions and calibration",
-      "all six accepted score tables retain exact score text, participant IDs, row order and public values",
-      "long-decimal raw input retains original text through native and shared CSV exports",
-      "healthy-control-only cohorts and missing rows",
-      "source isolation and output-path guards",
-      "resume and changed-input rejection"
+      "Model formulas and priors",
+      "Generated Stan code and Stan data",
+      "Deterministic probability and score calculations",
+      "Available saved synthetic-fit predictions",
+      "Completed score exports: score text, participant identifiers and row order"
     ],
-    "accepted_score_rows_per_outcome": 1275,
-    "new_production_MCMC": false,
-    "comparison_scope": "Model and six completed-export comparisons were performed for r3. The r4 revision compared both changed continuous-outcome scoring wrappers and complete held-out objects with saved synthetic fits. The r5 revision reran all 40 public tests and six check entry points, including shared export checks, and compared A-prime prepared inputs/folds and all six Stan datasets against r4. No new production fits were run. The r6 revision reran all 41 public tests and six check entry points, compared both CSV readers and validated inputs against r5 for all six outcome input files, and verified identical synthetic CSV construction. The strict structure checks do not change valid input values or model calculations. The r7 revision reran 42 public tests and all six check entry points without CPU arguments. All non-resource configuration values were identical to r6. This revision changes concurrency to one worker; it does not change the four sampling chains, iterations, seeds, priors or scoring precision rules. No new production MCMC or fitted-score equivalence claim is made for this revision. The r8 revision updates diagnosis labels to HC/MDD/BD and clarifies the estimated IQ input. All 43 public tests and six no-MCMC check entry points passed with these labels. Numerical preparations, eligibility and row selections were identical to r7 after accounting for diagnosis spelling, and A-prime automatic folds were identical. Numerical model settings and Stan files were unchanged. No new production MCMC or posterior-convergence assessment was performed."
+    "interpretation": "These comparisons verify implementation consistency; they do not establish convergence of a new production fit."
   },
-  "publication_checks": {
-    "source_only": true,
-    "participant_records_in_release": false,
-    "model_objects_in_release": false,
-    "machine_specific_paths_or_credentials_found": false,
-    "local_document_links": "PASS",
-    "license": "MIT",
-    "source_inventory": "provenance/source_manifest.csv",
-    "release_integrity": "RELEASE_MANIFEST.json and SHA256SUMS"
+  "current_distribution_checks": {
+    "documentation": {
+      "markdown_files": 15,
+      "local_links": 116,
+      "R_snippets": 21,
+      "errors": []
+    },
+    "R_example_syntax": "PASS: 21 examples parsed",
+    "executable_R_expressions": "PASS: all 138 R files identical to preceding version after ignoring comments",
+    "model_configuration_and_installation_code": "PASS: byte-identical to preceding version",
+    "citation": "PASS: YAML parsed; repository URL, version, date, MIT license and nine authors checked",
+    "file_integrity_verifier": "scripts/verify_release.R",
+    "file_manifest": "RELEASE_MANIFEST.json",
+    "source_manifest": "provenance/source_manifest.csv"
   },
   "environment": {
     "R": "4.6.1",
@@ -267,166 +254,10 @@
     "execution_host": "Linux"
   },
   "limitations": [
-    "No new production MCMC fit or posterior-convergence assessment was performed for this reorganization.",
+    "The full software test suite and no-MCMC entry-point checks were not repeated for this documentation and distribution revision.",
+    "No new production MCMC fit or posterior-convergence assessment was performed for these distribution revisions.",
     "Native Windows and macOS execution was not available for testing.",
-    "Synthetic checks and preserved model calculations do not establish suitability for a new dataset.",
-    "Changed source and output schemas require a fresh output directory; previous caches cannot be resumed.",
-    "Prior-predictive check failure policy is unchanged: movement stops, latency records a warning. Inspect all fit and calibration diagnostics."
-  ],
-  "usability_revision_checks": {
-    "active_config_fields_reviewed": 168,
-    "source_safety_regression": "PASS: configuration loading preserves caller thread settings, including validation failure",
-    "core_argument_consistency": "PASS: all seven public entry points reject nonnumeric, out-of-range and noninteger cores",
-    "aprime_resource_caps": "PASS: configuration caps and public core budget are both respected; default sampling effort unchanged",
-    "continuous_scoring_equivalence": "PASS: exact full-reference z and complete held-out score/simulation objects for both changed outcomes; no refitting",
-    "fresh_entrypoint_checks": "PASS: all six outcomes, full and five training-fold designs and Stan syntax; no MCMC; caller environment restored",
-    "documentation": {
-      "markdown_files": 23,
-      "local_links": 202,
-      "parsed_R_snippets": 38,
-      "status": "PASS"
-    },
-    "new_guides": [
-      "docs/SETTINGS.md",
-      "docs/SETTINGS_JA.md",
-      "docs/DIAGNOSTICS.md",
-      "docs/DIAGNOSTICS_JA.md"
-    ],
-    "verification_release": "2026.10.21-r4"
-  },
-  "public_readiness_revision_checks": {
-    "verification_release": "2026.10.21-r5",
-    "strict_aprime_config": "PASS: exact nested field schemas, types, required values, duplicate keys, original bounds and optional recovery",
-    "aprime_references": "PASS: unique root/nested fold lookup, copied fold hash, unchanged shared cohort selection and no obsolete diagnosis-map outputs",
-    "aprime_preparation_equivalence": "PASS: retained prepared columns, generated/supplied folds and full/five-fold Stan data identical to r4",
-    "unchanged_model_sources": {
-      "default_files_unchanged": [
-        "RTI_reaction/config.R",
-        "RTI_movement/model_settings.R",
-        "RVP_latency/model_settings.R",
-        "RVP_A_prime/config.json",
-        "SWM_Between_errors/config.R",
-        "SWM_Strategy/config.R"
-      ],
-      "unchanged_definition_calculation_and_helper_files": 75
-    },
-    "aprime_missing_rows": "PASS: unsupported-platform ineligible rows retained; eligible unsupported rows still rejected",
-    "diagnostic_archive": "PASS: renamed archive contents and completion-marker invalidation with a path containing spaces",
-    "fresh_public_tests": 40,
-    "fresh_entrypoint_checks": "PASS: all six outcomes; design and Stan syntax checks without MCMC; caller environment restored",
-    "documentation": {
-      "markdown_files": 23,
-      "local_links": 202,
-      "R_snippets": 38,
-      "errors": []
-    },
-    "publication_inventory": "Checked separately after this report and release manifest were finalized"
-  },
-  "input_workflow_revision_checks": {
-    "verification_release": "2026.10.21-r6",
-    "malformed_csv_regression": "PASS: previously a synthetic malformed 12-row CSV was accepted as 6 rows; now rejected before input creation",
-    "column_structure": "PASS: inconsistent header/data widths, missing fields and blank records rejected",
-    "valid_csv_formats": "PASS: quoted commas, escaped quotes, multiline fields, Unicode, UTF-8 BOM, CRLF and no final newline",
-    "valid_input_equivalence": "PASS: all six valid source tables, raw cell strings and validated attributes identical to r5; synthetic builder output bytes identical",
-    "documented_workflow": "PASS: documented export mapping and CSV construction executed in project/working_directory with adjacent input folder and spaces in parent path",
-    "fresh_public_tests": 41,
-    "fresh_entrypoint_checks": "PASS: all six outcomes, no MCMC, caller environment restored",
-    "documentation": {
-      "markdown_files": 23,
-      "local_links": 202,
-      "R_snippets": 38,
-      "errors": []
-    }
-  },
-  "single_core_revision_checks": {
-    "verification_release": "2026.10.21-r7",
-    "public_interface": "PASS: no cores argument on run_cantab, six run_outcome functions or the setup helper",
-    "runtime_defaults": "PASS: all six workflows default to one worker; sampling retains four chains; scoring defaults to one worker",
-    "entrypoint_allocation": "PASS: all six check runs without CPU arguments recorded one core despite a caller budget of eight; caller environment restored",
-    "reaction_fresh_resume_dispatch": "PASS: intercepted child dispatch used one core, one numerical-library thread and serial compilation in fresh and resume modes; no MCMC",
-    "unchanged_statistical_settings": "PASS: all non-resource configuration values exactly equal to the preceding release for all six outcomes",
-    "fresh_public_tests": 42,
-    "fresh_entrypoint_checks": "PASS: all six outcomes, no MCMC",
-    "documentation": {
-      "markdown_files": 23,
-      "local_links": 202,
-      "R_snippets": 38,
-      "errors": []
-    },
-    "setup_scope": "Installer now passes one compilation core and one R package installation worker; dependencies were already installed, so installation was not repeated",
-    "publication_inventory": "Checked separately after this report and release manifest were finalized"
-  },
-  "diagnosis_and_IQ_documentation_revision_checks": {
-    "verification_release": "2026.10.21-r8",
-    "diagnosis_contract": "HC: healthy control; MDD: major depressive disorder; BD: bipolar disorder",
-    "new_regression": "PASS: three diagnosis groups, CSV construction, reference-cohort selection, invalid labels, all six common exports and correct control/patient reference routing",
-    "preparation_equivalence": "PASS: all six numerical preparations, eligibility and row selections identical to the preceding release after accounting for diagnosis spelling; A-prime automatic folds identical",
-    "statistical_settings": {
-      "unchanged_configuration_files": [
-        "RTI_reaction/config.R",
-        "RTI_movement/model_settings.R",
-        "RVP_latency/model_settings.R",
-        "RVP_A_prime/config.json",
-        "SWM_Strategy/config.R"
-      ],
-      "between_errors_only_label_constants_changed": true,
-      "unchanged_Stan_files": 1
-    },
-    "IQ_input": "FSIQ column retained: baseline estimated full-scale IQ on the mean-100 SD-15 scale; NART and validated language adaptations such as JART described; no raw-test-to-IQ conversion or cross-instrument harmonization implemented",
-    "packaged_examples": "PASS: four-row input created from the participant and assessment example tables with new diagnosis labels and unchanged IQ values",
-    "fresh_public_tests": 43,
-    "fresh_entrypoint_checks": "PASS: all six outcomes, new diagnosis labels, one-core allocation and caller environment restored; no MCMC",
-    "documentation": {
-      "markdown_files": 23,
-      "local_links": 202,
-      "R_snippets": 38,
-      "errors": []
-    },
-    "publication_inventory": "Checked separately after this report and release manifest were finalized"
-  },
-  "documentation_defaults_revision_checks": {
-    "verification_release": "2026.10.21-r9",
-    "scope": "Documentation and example comments only; numerical model code and default configuration values unchanged",
-    "analysis_code_and_configuration": "PASS: byte-identical to the preceding release",
-    "example_behavior": "PASS: parsed R expressions identical before and after comment removal",
-    "defaults_regression": "PASS: existing default-configuration regression rerun successfully",
-    "documentation": {
-      "markdown_files": 23,
-      "local_links": 202,
-      "R_snippets": 38,
-      "errors": []
-    },
-    "previous_full_validation_release": "2026.10.21-r8",
-    "previous_full_validation": "43 public tests and six no-MCMC entry-point checks passed in r8; the full suite was not repeated for this documentation-only revision",
-    "publication_inventory": "Checked separately after this report and release manifest were finalized"
-  },
-  "storage_documentation_revision_checks": {
-    "verification_release": "2026.10.21-r10",
-    "scope": "Repeated data-storage notices consolidated into a brief publication note in the English and Japanese README; operational output-path instructions retained",
-    "analysis_code_and_configuration": "PASS: byte-identical to the preceding release",
-    "output_path_guards_and_git_exclusions": "PASS: unchanged",
-    "documentation": {
-      "markdown_files": 23,
-      "local_links": 202,
-      "R_snippets": 38,
-      "errors": []
-    },
-    "previous_full_validation_release": "2026.10.21-r8",
-    "previous_full_validation": "43 public tests and six no-MCMC entry-point checks passed in r8; no analysis code changed in r9 or r10, so the full suite was not repeated for these documentation revisions",
-    "publication_inventory": "Checked separately after this report and release manifest were finalized"
-  },
-  "documentation_clarity_revision_checks": {
-    "verification_release": "2026.10.21-r11",
-    "scope": "Removed RStudio menu and basic R/path tutorials; shortened repeated setup instructions in the English and Japanese guides and example comments",
-    "analysis_code_and_configuration": "PASS: unchanged; executable example expressions identical to preceding release",
-    "documentation": {
-      "markdown_files": 23,
-      "local_links": 202,
-      "R_snippets": 36,
-      "errors": []
-    },
-    "previous_full_validation_release": "2026.10.21-r8",
-    "previous_full_validation": "43 public tests and six no-MCMC entry-point checks passed in r8; analysis behavior is unchanged in r9 through r11, so the full suite was not repeated for these documentation revisions",
-    "publication_inventory": "Checked separately after this report and release manifest were finalized"
-  }
+    "Synthetic checks and model comparisons do not establish suitability for a new dataset.",
+    "The recorded package versions are a reference, not an automatically restored dependency lockfile."
+  ]
 }

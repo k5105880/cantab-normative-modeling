@@ -1,6 +1,6 @@
 # Input schemas and synthetic examples
 
-Read the [English data guide](../docs/DATA.md) or [日本語ガイド](../docs/DATA_JA.md).
+Read the [English data guide](../docs/DATA.md).
 
 - `templates/participants_header.csv`: one row per participant, before joining.
 - `templates/assessments_header.csv`: one row per assessment, before joining.

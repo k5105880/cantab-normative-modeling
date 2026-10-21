@@ -52,4 +52,4 @@ The check reports differences from the tested configuration; matching versions a
 
 Prefer output paths without spaces where required by the CmdStan toolchain.
 
-[日本語の環境準備](README_JA.md) · [Execution guide](../docs/USAGE.md) · [Model settings](../docs/SETTINGS.md) · [Logs and diagnostics](../docs/DIAGNOSTICS.md)
+[Execution guide](../docs/USAGE.md) · [Model settings](../docs/SETTINGS.md) · [Logs and diagnostics](../docs/DIAGNOSTICS.md)

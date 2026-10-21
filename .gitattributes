@@ -1,0 +1,2 @@
+# Preserve exact release bytes so SHA-256 remains valid after Git checkout.
+* -text

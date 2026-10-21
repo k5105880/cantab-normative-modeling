@@ -1,6 +1,6 @@
 # Settings and source-file roles
 
-[日本語](SETTINGS_JA.md) · [Run an analysis](USAGE.md) · [Inspect diagnostics](DIAGNOSTICS.md)
+[Run an analysis](USAGE.md) · [Inspect diagnostics](DIAGNOSTICS.md)
 
 ## Start with these four settings
 
