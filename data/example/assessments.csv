@@ -1,0 +1,5 @@
+Subject_ID,Assessment_date,Timepoint,Platform,SWM_Between_errors,SWM_Strategy,RVP_A_prime,RVP_Median_latency,RTI_Median_five-choice_reaction_time,RTI_Median_five-choice_movement_time
+EXAMPLE_001,2020-01-01,1,RS6,4,32,0.9,400,310,220
+EXAMPLE_001,2021-01-01,2,Connect,,8,0.95,390,300,210
+EXAMPLE_002,2021-02-03,1,Connect,0,2,1,450,350,250
+EXAMPLE_002,2022-02-03,2,Connect,2,3,0.92,460,360,260

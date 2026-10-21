@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the software release and version used."
+title: "CANTAB normative modeling for six cognitive outcomes"
+type: software
+version: "2026.10.21-r11"
+license: MIT
+abstract: "R workflows for preparing longitudinal CANTAB data, fitting six normative models, and calculating assessment-level normative scores."
+authors:
+  - family-names: "Kamishikiryo"
+    given-names: "Toshiharu"
+  - family-names: "Masuda"
+    given-names: "Yoshikazu"
+  - family-names: "Itai"
+    given-names: "Eri"
+  - family-names: "Fermin"
+    given-names: "Alan S. R."
+  - family-names: "Hattori"
+    given-names: "Shin"
+  - family-names: "Matsumoto"
+    given-names: "Yoichiro"
+  - family-names: "Omura"
+    given-names: "Jun"
+  - family-names: "Fujita"
+    given-names: "Sho"
+  - family-names: "Okada"
+    given-names: "Go"
