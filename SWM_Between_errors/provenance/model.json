@@ -1,0 +1,48 @@
+{
+  "outcome": "SWM_Between_errors",
+  "outcome_label": "Spatial working-memory errors",
+  "model": "Hurdle discretized normal model for error counts with trial-count adjustment",
+  "description": "Separates zero errors from positive counts and uses a discretized normal distribution for positive counts. Trial exposure is accounted for within the model; input counts are not divided by four.",
+  "raw_column": "SWM_Between_errors",
+  "raw_unit": "count",
+  "entrypoint": "run.R",
+  "result_file": "normative_scores.csv",
+  "score_column": "normative_z",
+  "score_direction": "higher_is_worse",
+  "settings": {
+    "chains": 4,
+    "all_healthy_controls": {
+      "iterations_per_chain": 3000,
+      "warmup_per_chain": 1000
+    },
+    "cross_validation": {
+      "folds": 5,
+      "iterations_per_chain": 3000,
+      "warmup_per_chain": 1000
+    },
+    "adapt_delta": 0.995,
+    "max_treedepth": 18,
+    "sampling_recovery": {
+      "iterations_per_chain": 5000,
+      "warmup_per_chain": 1500,
+      "adapt_delta": 0.999,
+      "max_treedepth": 20,
+      "trigger": "sampling_diagnostic_failure",
+      "max_retries": 1
+    },
+    "prior_predictive": {
+      "iterations_per_chain": 1200,
+      "warmup_per_chain": 600
+    }
+  },
+  "settings_note": "Default settings, shown for reference. This JSON is documentation; editing it does not configure a run.",
+  "definition": [
+    "vendor/common_model_definitions.R",
+    "vendor/final_model_definition.R",
+    "vendor/count_distribution.R",
+    "R/models.R"
+  ],
+  "optional_cohort_file": "diagnosis_reference.csv",
+  "model_id": "normative",
+  "score_scope": "assessment-level normative state"
+}

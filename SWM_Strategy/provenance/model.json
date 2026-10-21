@@ -1,0 +1,42 @@
+{
+  "outcome": "SWM_Strategy",
+  "outcome_label": "Spatial working-memory strategy",
+  "model": "Minimum-inflated discretized beta model for strategy scores",
+  "description": "Combines additional probability at the minimum with a discretized beta distribution. RS6 scores are divided by four inside the model; the different score grids are retained.",
+  "raw_column": "SWM_Strategy",
+  "raw_unit": "score",
+  "entrypoint": "run.R",
+  "result_file": "normative_scores.csv",
+  "score_column": "normative_z",
+  "score_direction": "higher_is_worse",
+  "settings": {
+    "chains": 4,
+    "all_healthy_controls": {
+      "iterations_per_chain": 4000,
+      "warmup_per_chain": 1500
+    },
+    "cross_validation": {
+      "folds": 5,
+      "iterations_per_chain": 4000,
+      "warmup_per_chain": 1500
+    },
+    "adapt_delta": 0.999,
+    "max_treedepth": 12,
+    "sampling_recovery": {
+      "iter": 5000,
+      "warmup": 2500,
+      "adapt_delta": 0.9999,
+      "trigger": "divergences_only",
+      "max_retries": 1
+    }
+  },
+  "settings_note": "Default settings, shown for reference. This JSON is documentation; editing it does not configure a run.",
+  "definition": [
+    "R/swm_core.R",
+    "R/swm_discrete_family.R",
+    "stan/swm_discrete_functions.stan"
+  ],
+  "optional_cohort_file": "diagnosis_reference.csv",
+  "model_id": "normative",
+  "score_scope": "assessment-level normative state"
+}
