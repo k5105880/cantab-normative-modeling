@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "analysis": "RVP_A_prime_normative",
+  "seed": 20260922,
+  "sampling": {
+    "chains": 4,
+    "iter": 5000,
+    "warmup": 1500,
+    "cores": 1,
+    "adapt_delta": 0.9995,
+    "max_treedepth": 20,
+    "refresh": 200
+  },
+  "sampling_recovery": {
+    "trigger": "divergence_only",
+    "max_retries": 1,
+    "warmup": 2500,
+    "adapt_delta": 0.9999
+  },
+  "prior": {
+    "draws": 40000,
+    "batch_size": 500
+  },
+  "calibration_bootstraps": 2000,
+  "scoring": {
+    "nodes": [
+      32,
+      64,
+      128,
+      256
+    ],
+    "tolerance": 0.002,
+    "mcse_limit": 0.03,
+    "workers": 1,
+    "chunk": 8
+  }
+}

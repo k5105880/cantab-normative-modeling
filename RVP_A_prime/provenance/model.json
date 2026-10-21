@@ -1,0 +1,57 @@
+{
+  "outcome": "RVP_A_prime",
+  "outcome_label": "Attention sensitivity (A prime)",
+  "model": "Extended-support beta model for attention sensitivity",
+  "description": "Uses an extended-support beta distribution with observations censored to the interval from 0 to 1. Exact values of 0 and 1 are supported.",
+  "raw_column": "RVP_A_prime",
+  "raw_unit": "0–1",
+  "entrypoint": "run.R",
+  "result_file": "normative_scores.csv",
+  "score_column": "normative_z",
+  "score_direction": "higher_is_better",
+  "settings": {
+    "chains": 4,
+    "all_healthy_controls": {
+      "iterations_per_chain": 5000,
+      "warmup_per_chain": 1500
+    },
+    "cross_validation": {
+      "folds": 5,
+      "iterations_per_chain": 5000,
+      "warmup_per_chain": 1500
+    },
+    "adapt_delta": 0.9995,
+    "max_treedepth": 20,
+    "sampling_recovery": {
+      "iter": 6000,
+      "warmup": 2500,
+      "adapt_delta": 0.9999,
+      "trigger": "divergences_only",
+      "max_retries": 1
+    }
+  },
+  "settings_note": "Default settings, shown for reference. This JSON is documentation; editing it does not configure a run.",
+  "definition": [
+    "R/model_spec.R"
+  ],
+  "optional_cohort_file": "diagnosis_reference.csv",
+  "random_seed": 20260922,
+  "model_seed_rule": "random_seed + 10000 + 101 * fold (fold 0 is the full-control fit)",
+  "fold_assignment": {
+    "seed": 1334,
+    "candidates": 500,
+    "method": "Outcome-blind grouped five-fold covariate balance, excluding response and FSIQ"
+  },
+  "numerical_scoring": {
+    "quadrature_nodes": [
+      32,
+      64,
+      128,
+      256
+    ],
+    "quadrature_z_tolerance": 0.002,
+    "posterior_mcse_limit": 0.03
+  },
+  "prior_predictive_draws": 40000,
+  "calibration_bootstraps": 2000
+}
