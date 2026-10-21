@@ -1,0 +1,71 @@
+# Exercise complete orchestration for an all-HC cohort with sampling intercepted.
+args<-gsub('~+~', ' ', commandArgs(FALSE), fixed=TRUE)
+here<-dirname(dirname(normalizePath(sub('^--file=','',grep('^--file=',args,value=TRUE)[1]))))
+local({
+  root<-tempfile('reaction_healthy_only_');dir.create(root)
+  on.exit(unlink(root,recursive=TRUE))
+  d<-expand.grid(Timepoint=1:4,subject=1:40)
+  d$Subject_ID<-sprintf('%03d',d$subject);d$Diagnosis<-'HC'
+  d$Gender<-ifelse(d$subject%%2,'F','M')
+  d$Platform<-ifelse(d$subject<=20,'RS6','Connect')
+  d$FSIQ<-85+d$subject%%17;d$Age_baseline_years<-25+d$subject
+  d$Time_since_baseline_years<-(d$Timepoint-1)*(0.7+(d$subject%%7)/10)
+  raw_column<-'RTI_Median_five-choice_reaction_time'
+  d[[raw_column]]<-as.character(300+d$subject+d$Timepoint)
+  d[[raw_column]][1]<-'350.12345678901234'
+  d[['RTI_Median_five-choice_movement_time']]<-'250'
+  d$RVP_A_prime<-'0.8';d$RVP_Median_latency<-'400'
+  d$SWM_Between_errors<-'4';d$SWM_Strategy<-'5'
+  input<-file.path(root,'input.csv');write.csv(d,input,row.names=FALSE)
+  folds<-file.path(root,'folds.csv')
+  write.csv(data.frame(Subject_ID=sprintf('%03d',1:40),CV_fold=rep(1:5,8)),
+            folds,row.names=FALSE)
+  out<-file.path(root,'model')
+  e<-new.env(parent=globalenv())
+  source(file.path(here,'run_analysis.R'),local=e)
+  e$commandArgs<-function(trailingOnly=FALSE)if(trailingOnly)
+    c('--run','--input',input,'--folds',folds,'--output-dir',out)else
+    paste0('--file=',file.path(here,'run_analysis.R'))
+  fits<-list();prior_calls<-0L;predicted<-integer()
+  e$rti_fit<-function(train,def,cfg,path,seed,full=FALSE) {
+    fits[[length(fits)+1L]]<<-list(seed=seed,full=full,rows=train$row_id_global)
+    structure(list(),class='sampling_intercepted')
+  }
+  e$rti_prior_check<-function(...)prior_calls<<-prior_calls+1L
+  e$rti_predict_normative<-function(fit,nd,cfg) {
+    stopifnot(nrow(nd)>0L)
+    predicted<<-c(predicted,nd$row_id_global)
+    data.frame(row_id_global=nd$row_id_global,z=0,z_estimate=0,
+      numerical_ok=TRUE,score_ok=TRUE,score_status='ok',
+      posterior_mc_ok=TRUE,posterior_mcse_z=.01,posterior_mc_status='ok',
+      quad_z_diff=0,quad_log_score_diff=0)
+  }
+  # The real predictor supplies the draw count; return it from the test fit here.
+  e$posterior_draw_count<-function(fit)1000L
+  body(e$main)<-parse(text=gsub('posterior::ndraws(fit)','posterior_draw_count(fit)',
+    paste(deparse(body(e$main)),collapse='\n'),fixed=TRUE))[[1]]
+  e$main()
+  scores<-read.csv(file.path(out,'normative_all_rows_scores.csv'))
+  score_text<-read.csv(file.path(out,'normative_all_rows_scores.csv'),
+    colClasses='character',na.strings=NULL,check.names=FALSE)
+  stopifnot(identical(score_text$NM_raw,d[[raw_column]]),
+            identical(score_text[[raw_column]],d[[raw_column]]))
+  stopifnot(length(fits)==6L,identical(vapply(fits,function(x)x$full,logical(1)),
+    c(rep(FALSE,5L),TRUE)),prior_calls==1L,
+    !anyDuplicated(predicted),setequal(predicted,seq_len(nrow(d))),
+    all(scores$normative_source=='HC_subject_OOF'),all(scores$normative_status=='ok'),
+    readLines(file.path(out,'STATUS.txt'))[1]=='NORMATIVE_COMPLETE')
+  source(file.path(here,'build_normative_csv.R'))
+  rti_build_normative_csv(out,file.path(root,'analysis'))
+  analysis<-read.csv(file.path(root,'analysis','RTI_analysis_ready.csv'),
+    colClasses='character',na.strings=NULL,check.names=FALSE)
+  stopifnot(identical(analysis$NM_raw,d[[raw_column]]),
+            identical(analysis[[raw_column]],d[[raw_column]]))
+  source(file.path(dirname(here),'R','input_data.R'))
+  source(file.path(dirname(here),'R','results.R'))
+  cantab_export_results('RTI_reaction',input,root)
+  public<-read.csv(file.path(root,'normative_scores.csv'),
+    colClasses='character',na.strings=NULL,check.names=FALSE)
+  stopifnot(identical(public$raw_score,d[[raw_column]]))
+  cat('PASS: all-HC cohort completes five held-out predictions, full-HC fitting, and prior checks without an empty non-HC prediction; long-decimal raw values survive model, analysis, and public exports exactly; sampling intercepted.\n')
+})

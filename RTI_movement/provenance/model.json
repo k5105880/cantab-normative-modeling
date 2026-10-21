@@ -1,0 +1,54 @@
+{
+  "outcome": "RTI_movement",
+  "outcome_label": "Movement time",
+  "model": "Student-t model for log-transformed movement time",
+  "description": "Uses a Student-t distribution for log(1 + milliseconds). Residual variability can differ by platform and assessment occasion.",
+  "raw_column": "RTI_Median_five-choice_movement_time",
+  "raw_unit": "ms",
+  "entrypoint": "run.R",
+  "result_file": "normative_scores.csv",
+  "score_column": "normative_z",
+  "score_direction": "higher_is_worse",
+  "settings": {
+    "chains": 4,
+    "all_healthy_controls": {
+      "iterations_per_chain": 5000,
+      "warmup_per_chain": 1500
+    },
+    "cross_validation": {
+      "folds": 5,
+      "iterations_per_chain": 6000,
+      "warmup_per_chain": 2000
+    },
+    "adapt_delta": 0.999,
+    "max_treedepth": 20
+  },
+  "settings_note": "Default settings, shown for reference. This JSON is documentation; editing it does not configure a run.",
+  "definition": [
+    "model_functions.R",
+    "model_settings.R",
+    "identifiability_runtime.R",
+    "state_cdf.R"
+  ],
+  "optional_cohort_file": "diagnosis_reference.csv",
+  "seeds": {
+    "main": 1234,
+    "fold_search": 1334,
+    "full_fit": 2235,
+    "cross_validation": 11235,
+    "prediction_draw_selection": 31234,
+    "PIT": 32234,
+    "prior_fit": 401335,
+    "prior_prediction_selection": 401347
+  },
+  "numerical_scoring": {
+    "quadrature_nodes": 32,
+    "check_nodes": 64,
+    "maximum_nodes": 1024,
+    "z_tolerance": 0.0001,
+    "relative_tail_tolerance": 0.0001,
+    "draw_probability_tolerance": 1e-06,
+    "posterior_mcse_z_limit": 0.02,
+    "posterior_draws": "all retained draws"
+  }
+}

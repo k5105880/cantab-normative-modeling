@@ -1,0 +1,66 @@
+{
+  "outcome": "RTI_reaction",
+  "outcome_label": "Reaction time",
+  "model": "Student-t model for log-transformed reaction time with platform-specific participant intercepts",
+  "description": "Uses a Student-t distribution for log(1 + milliseconds). Participant-specific intercepts can differ by platform, with a common participant time slope.",
+  "raw_column": "RTI_Median_five-choice_reaction_time",
+  "raw_unit": "ms",
+  "entrypoint": "run.R",
+  "result_file": "normative_scores.csv",
+  "score_column": "normative_z",
+  "score_direction": "higher_is_worse",
+  "settings": {
+    "chains": 4,
+    "all_healthy_controls": {
+      "iterations_per_chain": 5000,
+      "warmup_per_chain": 1500
+    },
+    "cross_validation": {
+      "folds": 5,
+      "iterations_per_chain": 3000,
+      "warmup_per_chain": 1000
+    },
+    "adapt_delta": 0.999,
+    "max_treedepth": 20,
+    "recovery": {
+      "maximum_attempts": 2,
+      "iteration_and_warmup_multiplier": 2,
+      "adapt_delta": 0.99999,
+      "seed_increment": 1
+    },
+    "seed": 20260921,
+    "fit_seed_offset": 31000,
+    "fold_seed_increment": 10,
+    "convergence": {
+      "maximum_rhat_exclusive": 1.01,
+      "minimum_bulk_and_tail_ess": 400,
+      "minimum_bfmi": 0.3,
+      "allowed_divergences": 0,
+      "allowed_max_treedepth_hits": 0
+    },
+    "precision": {
+      "posterior_mcse_z_maximum": 0.03,
+      "quadrature_nodes": 40,
+      "quadrature_check_nodes": 80,
+      "quadrature_maximum_nodes": 320,
+      "z_tolerance": 0.005,
+      "log_density_tolerance": 0.0001
+    }
+  },
+  "settings_note": "Default settings, shown for reference. This JSON is documentation; editing it does not configure a run.",
+  "definition": [
+    "rti_core.R",
+    "rti_cdf.R"
+  ],
+  "optional_cohort_file": "diagnosis_reference.csv",
+  "priors": {
+    "mean_coefficients": "normal(0, 0.20)",
+    "participant_sd": "exponential(5)",
+    "smooth_sd": "exponential(5)",
+    "participant_correlation": "lkj(2)",
+    "mean_intercept": "normal(5.75, 0.35)",
+    "log_sigma_intercept": "normal(-1.71, 0.50)",
+    "log_sigma_coefficients": "normal(0, 0.25)",
+    "student_nu": "gamma(5, 0.5)"
+  }
+}
