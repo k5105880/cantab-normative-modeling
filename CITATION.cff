@@ -5,8 +5,9 @@ type: software
 version: "2026.10.21-r12"
 date-released: "2026-10-21"
 repository-code: "https://github.com/k5105880/cantab-normative-modeling"
+url: "https://github.com/k5105880/cantab-normative-modeling"
 license: MIT
 abstract: "R workflows for preparing longitudinal CANTAB data, fitting six normative models, and calculating assessment-level normative scores."
-author:
+authors:
   - family-names: "Kamishikiryo"
     given-names: "Toshiharu"

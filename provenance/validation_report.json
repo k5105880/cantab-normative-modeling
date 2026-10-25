@@ -242,10 +242,11 @@
     "R_example_syntax": "PASS: 21 examples parsed",
     "executable_R_expressions": "PASS: all 138 R files identical to preceding version after ignoring comments",
     "model_configuration_and_installation_code": "PASS: byte-identical to preceding version",
-    "citation": "PASS: YAML parsed; repository URL, version, date, MIT license and nine authors checked",
+    "citation": "PASS: required and allowed CFF v1.2.0 fields, repository URL, version, date, MIT license and single author checked",
     "file_integrity_verifier": "scripts/verify_release.R",
     "file_manifest": "RELEASE_MANIFEST.json",
-    "source_manifest": "provenance/source_manifest.csv"
+    "source_manifest": "provenance/source_manifest.csv",
+    "citation_checked_on": "2026-10-25"
   },
   "environment": {
     "R": "4.6.1",

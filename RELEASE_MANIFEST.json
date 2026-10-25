@@ -16,8 +16,8 @@
     },
     {
       "path": "CITATION.cff",
-      "bytes": 958,
-      "sha256": "77de3dcd5ed19672ab4fc8fdd264a3a9d685d8c1f85039483352aa15c73e5f0c"
+      "bytes": 601,
+      "sha256": "1b134df20c44f4a52f6cfe46c9db4463d148c7de644ef9b9489a6eee0e09abfe"
     },
     {
       "path": "LICENSE",
@@ -482,7 +482,7 @@
     {
       "path": "SHA256SUMS",
       "bytes": 17152,
-      "sha256": "06e74a9148e1c50fbc8e16ead111a5d3fecfab60a35e4ea5847812a3306eb0c6"
+      "sha256": "9af9ec9861c4ed0dfa54a4ae4cd35d7a04b2b46f07af3d7c91b3066577c68ba2"
     },
     {
       "path": "SWM_Between_errors/R/bootstrap.R",
@@ -841,8 +841,8 @@
     },
     {
       "path": "provenance/validation_report.json",
-      "bytes": 7508,
-      "sha256": "93b9eae790929ba660c086879828a2baa736f871b9137b21421dca8384501bde"
+      "bytes": 7577,
+      "sha256": "8a072dbcd8fcb9d342731dfab098febee283009de0cbff882ac7bf74fc15a2a6"
     },
     {
       "path": "run_analysis.R",
