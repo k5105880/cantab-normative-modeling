@@ -8,6 +8,8 @@ cantab_output_directory <- function(output_dir, repository) {
     stop("Supply one output directory outside the public repository.")
   repository <- normalizePath(repository, winslash = "/", mustWork = TRUE)
   destination <- path.expand(output_dir)
+  if (.Platform$OS.type != "windows" && grepl("^[A-Za-z]:[/\\\\]", destination))
+    stop("Windows drive paths are not absolute on this system; supply a local output path outside the public repository.")
   if (!grepl("^(/|[A-Za-z]:[/\\\\]|\\\\\\\\)", destination))
     destination <- file.path(getwd(), destination)
   # Resolve existing components in order: symlink/.. must follow the real path.

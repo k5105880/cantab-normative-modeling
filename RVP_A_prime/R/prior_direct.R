@@ -4,15 +4,19 @@
 
 validate_prior_model <- function(fit) {
   code <- fit$model
+  d <- brms::make_standata(fit)
+  splines <- as.integer(sub("^nb_", "", grep("^nb_[0-9]+$",names(d),value=TRUE)))
+  stopifnot(length(splines)<=2L, identical(splines,seq_along(splines)))
+  d$n_splines <- length(splines)
+  if(!length(splines)) d$Ks <- 0L
   compact <- function(x) gsub("[[:space:]]+", "", x)
   lines <- trimws(strsplit(code, "\n", fixed = TRUE)[[1]])
   expected <- c(
     "lprior += normal_lpdf(b | 0, 0.5);",
     "lprior += student_t_lpdf(Intercept | 3, 0, 2.5);",
-    "lprior += normal_lpdf(bs | 0, 0.5);",
-    "lprior += exponential_lpdf(sds_1 | 1);",
-    "lprior += exponential_lpdf(sds_2 | 1);",
-    "lprior += normal_lpdf(b_phi | 0, 0.4);",
+    if(length(splines)) "lprior += normal_lpdf(bs | 0, 0.5);",
+    sprintf("lprior += exponential_lpdf(sds_%d | 1);",splines),
+    if(d$Kc_phi>0L) "lprior += normal_lpdf(b_phi | 0, 0.4);",
     "lprior += student_t_lpdf(Intercept_phi | 3, 0, 2.5);",
     "lprior += gamma_lpdf(kappa | 0.01, 0.01);",
     "lprior += exponential_lpdf(sd_1 | 1);",
@@ -21,38 +25,40 @@ validate_prior_model <- function(fit) {
   if (!identical(sort(compact(actual)), sort(compact(expected))))
     stop("Stan prior assertion failed: unsupported primitive prior density")
   targets <- c("target += xbeta_lpdf(Y | mu, phi, kappa);", "target += lprior;",
-    "target += std_normal_lpdf(zs_1_1);", "target += std_normal_lpdf(zs_2_1);",
+    sprintf("target += std_normal_lpdf(zs_%d_1);",splines),
     "target += std_normal_lpdf(to_vector(z_1));")
   if (!identical(sort(compact(lines[grepl("^target[[:space:]]*\\+=", lines)])),
                  sort(compact(targets))))
     stop("Stan target assertion failed: unsupported additional density")
+  mu_terms <- c("Intercept", "Xc * b", if(length(splines)) "Xs * bs",
+                sprintf("Zs_%d_1 * s_%d_1",splines,splines))
   required <- c(
     "Xc[, i - 1] = X[, i] - means_X[i - 1];",
-    "Xc_phi[, i - 1] = X_phi[, i] - means_X_phi[i - 1];",
-    "s_1_1 = sds_1[1] * zs_1_1;", "s_2_1 = sds_2[1] * zs_2_1;",
+    if(d$Kc_phi>0L) "Xc_phi[, i - 1] = X_phi[, i] - means_X_phi[i - 1];",
+    sprintf("s_%d_1 = sds_%d[1] * zs_%d_1;",splines,splines,splines),
     "return transpose(diag_pre_multiply(SD, L) * z);",
     "r_1 = scale_r_cor(z_1, sd_1, L_1);",
-    "mu += Intercept + Xc * b + Xs * bs + Zs_1_1 * s_1_1 + Zs_2_1 * s_2_1;",
-    "phi += Intercept_phi + Xc_phi * b_phi;",
+    paste0("mu += ",paste(mu_terms,collapse=" + "),";"),
+    if(d$Kc_phi>0L) "phi += Intercept_phi + Xc_phi * b_phi;" else "phi += Intercept_phi;",
     "mu[n] += r_1_1[J_1[n]] * Z_1_1[n] + r_1_2[J_1[n]] * Z_1_2[n];",
     "mu = inv_logit(mu);", "phi = exp(phi);")
   if (!all(vapply(compact(required), grepl, logical(1), x=compact(code), fixed=TRUE)))
     stop("Stan transformation assertion failed: unsupported linear predictor")
-  d <- brms::make_standata(fit)
-  stopifnot(d$M_1 == 2, d$NC_1 == 1, d$nb_1 == 1, d$nb_2 == 1,
+  stopifnot(d$M_1 == 2, d$NC_1 == 1,
+    all(vapply(splines,function(i) identical(d[[paste0("nb_",i)]],1L),logical(1))),
     d$Kc == d$K-1L, d$Kc_phi == d$K_phi-1L, d$N == nrow(fit$data),
     all(d$X[,1] == 1), all(d$X_phi[,1] == 1),
     identical(as.numeric(d$Y), as.numeric(fit$data$NM_response)),
     identical(as.integer(d$J_1), as.integer(factor(fit$data$Subject_ID))))
   d$Xc <- sweep(d$X[,-1,drop=FALSE], 2, colMeans(d$X[,-1,drop=FALSE]), "-")
-  d$Xc_phi <- sweep(d$X_phi[,-1,drop=FALSE], 2,
-                    colMeans(d$X_phi[,-1,drop=FALSE]), "-")
+  d$Xc_phi <- if(d$Kc_phi>0L) sweep(d$X_phi[,-1,drop=FALSE], 2,
+                    colMeans(d$X_phi[,-1,drop=FALSE]), "-") else matrix(0,d$N,0)
   audit <- data.frame(check=c("exact_prior_density_assertions", "exact_target_density_assertions",
     "exact_predictor_assertions",
     "subject_design_index_matches", "centered_X_max_abs_column_mean",
     "centered_X_phi_max_abs_column_mean", "n_observations", "n_subjects"),
     value=c("PASS", "PASS", "PASS",
-      "PASS", max(abs(colMeans(d$Xc))), max(abs(colMeans(d$Xc_phi))), d$N, d$N_1))
+      "PASS", max(abs(colMeans(d$Xc))), if(d$Kc_phi>0L) max(abs(colMeans(d$Xc_phi))) else 0, d$N, d$N_1))
   list(data=d, audit=audit)
 }
 
@@ -63,9 +69,10 @@ draw_prior_parameters <- function(n, d) {
     Intercept_phi=2.5*rt(n,3),
     # Gamma boost identity is exact and keeps tiny positive kappa in log form.
     log_kappa=log(rgamma(n,shape=1.01,rate=.01))+log(runif(n))/.01,
-    sds1=rexp(n), sds2=rexp(n), sd1=rexp(n), sd2=rexp(n),
+    sds1=if(d$n_splines>=1L) rexp(n), sds2=if(d$n_splines>=2L) rexp(n), sd1=rexp(n), sd2=rexp(n),
     rho=2*rbeta(n,2,2)-1,
-    zs1=normal_matrix(d$knots_1[1]), zs2=normal_matrix(d$knots_2[1]))
+    zs1=if(d$n_splines>=1L) normal_matrix(d$knots_1[1]),
+    zs2=if(d$n_splines>=2L) normal_matrix(d$knots_2[1]))
   z1 <- normal_matrix(d$N_1)
   z2 <- normal_matrix(d$N_1)
   p$r1 <- z1*p$sd1
@@ -74,8 +81,9 @@ draw_prior_parameters <- function(n, d) {
 }
 
 direct_linear_predictors <- function(p, d) {
-  eta <- p$b %*% t(d$Xc) + p$Intercept + p$bs %*% t(d$Xs) +
-    (p$zs1*p$sds1) %*% t(d$Zs_1_1) + (p$zs2*p$sds2) %*% t(d$Zs_2_1)
+  eta <- p$b %*% t(d$Xc) + p$Intercept
+  if(d$n_splines>=1L) eta <- eta + p$bs %*% t(d$Xs) + (p$zs1*p$sds1) %*% t(d$Zs_1_1)
+  if(d$n_splines>=2L) eta <- eta + (p$zs2*p$sds2) %*% t(d$Zs_2_1)
   eta <- eta + sweep(p$r1[,d$J_1,drop=FALSE],2,d$Z_1_1,"*") +
     sweep(p$r2[,d$J_1,drop=FALSE],2,d$Z_1_2,"*")
   list(eta=eta, log_phi=p$b_phi %*% t(d$Xc_phi)+p$Intercept_phi)
@@ -179,20 +187,30 @@ quantile_mc_interval <- function(independent_y, probs) {
     lower_order=lower_order,upper_order=upper_order)
 }
 
-run_prior_direct <- function(fit_or_path, outdir, draws=40000L, seed=20260921L, batch_size=500L) {
+run_prior_direct <- function(fit_or_path, outdir, draws=40000L, seed=20260921L, batch_size=500L,
+                             training_data=NULL) {
   suppressPackageStartupMessages(library(brms))
   out_dir <- outdir
   dir.create(out_dir,recursive=TRUE,showWarnings=FALSE)
   fit <- if(is.character(fit_or_path)) read_accepted_fit(fit_or_path) else fit_or_path
   if(!inherits(fit,"brmsfit")) stop("Prior audit requires the newly fitted primary brmsfit")
-  if(!"FSIQ_15" %in% all.vars(fit$formula$formula) ||
-     "NM_baseline_response" %in% all.vars(fit$formula$formula))
+  if("NM_baseline_response" %in% all.vars(fit$formula$formula))
     stop("Direct prior audit is for the primary population specification")
+  # brms drops columns unused by the formula. Retain platform groups when a
+  # single represented platform has correctly been omitted from the model.
+  if(is.null(training_data)) training_data <- fit$data
+  if(!is.data.frame(training_data) || nrow(training_data)!=nrow(fit$data) ||
+     !all(names(fit$data)%in%names(training_data)) ||
+     !all(vapply(names(fit$data),function(nm)
+       identical(as.character(fit$data[[nm]]),as.character(training_data[[nm]])),logical(1))))
+    stop("Prior summary training rows do not match the fitted model")
+  if(!"Platform"%in%names(training_data) || anyNA(training_data$Platform))
+    stop("Training data with Platform are required for prior summaries")
   validation <- validate_prior_model(fit); d <- validation$data
   stopifnot(draws>=2000, draws%%batch_size==0)
   write.csv(validation$audit,file.path(out_dir,"design_and_prior_validation.csv"),row.names=FALSE)
   writeLines(fit$model,file.path(out_dir,"validated_model.stan"))
-  platform <- as.character(fit$data$Platform)
+  platform <- as.character(training_data$Platform)
   groups <- c(list(All=seq_len(d$N)),split(seq_len(d$N),platform))
   probs <- c(.01,.025,.05,.25,.5,.75,.95,.975,.99)
   all_y <- matrix(NA_real_,draws,d$N)
@@ -232,10 +250,13 @@ run_prior_direct <- function(fit_or_path, outdir, draws=40000L, seed=20260921L, 
       censored_floor=sum(x$floor),censored_ceiling=sum(x$ceiling),
       interior_numeric_zero=sum(x$numeric_zero), interior_numeric_one=sum(x$numeric_one))
     diagnostics[[b]] <- data.frame(batch=b,metric=names(diagnostic),count=as.numeric(diagnostic))
-    parameter_audit[[b]] <- data.frame(draw=ii,Intercept=p$Intercept,Intercept_phi=p$Intercept_phi,
-      b_first=p$b[,1],bs_first=p$bs[,1],b_phi_first=p$b_phi[,1],
+    audit_columns <- list(draw=ii,Intercept=p$Intercept,Intercept_phi=p$Intercept_phi,
+      b_first=p$b[,1],bs_first=if(ncol(p$bs)) p$bs[,1],
+      b_phi_first=if(ncol(p$b_phi)) p$b_phi[,1],
       log_kappa=p$log_kappa,kappa=exp(p$log_kappa),sds1=p$sds1,sds2=p$sds2,
-      sd1=p$sd1,sd2=p$sd2,rho=p$rho,zs1_first=p$zs1[,1],zs2_first=p$zs2[,1])
+      sd1=p$sd1,sd2=p$sd2,rho=p$rho,
+      zs1_first=if(d$n_splines>=1L) p$zs1[,1],zs2_first=if(d$n_splines>=2L) p$zs2[,1])
+    parameter_audit[[b]] <- as.data.frame(audit_columns[lengths(audit_columns)>0L])
     if(b%%10==0) cat("Independent prior draws:",max(ii),"/",draws,"\n")
   }
   rates <- do.call(rbind,rates); batch_q <- do.call(rbind,batch_q)

@@ -43,20 +43,44 @@ swm_model_definition<-function() {
   list(formula=formula,prior=prior,family=swm_family())
 }
 
-swm_pit_moments<-function(lo,hi) {
-  a<-qnorm(pmax(0,lo));b<-qnorm(pmin(1,hi));pa<-dnorm(a);pb<-dnorm(b)
-  width<-hi-lo
-  ez<-(pa-pb)/width
-  ez2<-1+(ifelse(is.finite(a),a*pa,0)-ifelse(is.finite(b),b*pb,0))/width
-  same<-width==0 & lo>0 & lo<1;ez[same]<-a[same];ez2[same]<-a[same]^2
-  tail<-width==0 & (lo==0|lo==1);ez[tail]<-ez2[tail]<-NA_real_
+swm_pit_moments<-function(lo,hi,log_lower=log(lo),log_mass=log(hi-lo),log_upper=log1p(-hi)) {
+  ez<-ez2<-rep(NA_real_,length(lo))
+  nodes<-(c(-.906179845938664,-.538469310105683,0,.538469310105683,.906179845938664)+1)/2
+  weights<-c(.236926885056189,.478628670499366,.568888888888889,.478628670499366,.236926885056189)/2
+  for(i in which(is.finite(log_mass))) {
+    ll<-log_lower[i];lm<-log_mass[i];lu<-log_upper[i]
+    if(lm<min(ll,lu)+log(1e-3)) {
+      # Integrate a narrow probability interval directly, preserving its small
+      # tail instead of subtracting nearly identical endpoint densities.
+      q<-if(ll<=lu)qnorm(swm_state_logadd(ll,lm+log(nodes)),log.p=TRUE)else
+        qnorm(swm_state_logadd(lu,lm+log1p(-nodes)),lower.tail=FALSE,log.p=TRUE)
+      ez[i]<-sum(weights*q);ez2[i]<-sum(weights*q*q)
+    } else {
+      a<-if(ll<=log(.5))qnorm(ll,log.p=TRUE)else qnorm(swm_state_logadd(lu,lm),lower.tail=FALSE,log.p=TRUE)
+      b<-if(lu<=log(.5))qnorm(lu,lower.tail=FALSE,log.p=TRUE)else qnorm(swm_state_logadd(ll,lm),log.p=TRUE)
+      pa<-if(is.finite(a))exp(dnorm(a,log=TRUE)-lm)else 0
+      pb<-if(is.finite(b))exp(dnorm(b,log=TRUE)-lm)else 0
+      ez[i]<-pa-pb
+      ez2[i]<-1+(if(is.finite(a))a*pa else 0)-(if(is.finite(b))b*pb else 0)
+    }
+    ez2[i]<-max(ez2[i],ez[i]^2)
+  }
+  same<-!is.finite(log_mass)&lo==hi&lo>0&lo<1
+  ez[same]<-qnorm(lo[same]);ez2[same]<-ez[same]^2
   data.frame(ez=ez,ez2=ez2)
+}
+
+swm_new_person_ids<-function(fit,ids) {
+  prefix<-'new_person_'
+  known<-union(as.character(fit$data$Subject_ID),levels(fit$data$Subject_ID))
+  while(any(paste0(prefix,ids)%in%known))prefix<-paste0(prefix,'_')
+  factor(paste0(prefix,ids))
 }
 
 swm_predict_sampled<-function(fit,d,ndraws=8000,seed=20260921) {
   if(any(!d$eligible))stop('Prediction input contains excluded rows')
   original_ids<-as.character(d$Subject_ID);nd<-d
-  nd$Subject_ID<-factor(paste0('new_person_',original_ids))
+  nd$Subject_ID<-swm_new_person_ids(fit,original_ids)
   set.seed(seed)
   available<-posterior::ndraws(fit)
   draw_ids<-sample(seq_len(available),ndraws,replace=ndraws>available)
@@ -68,7 +92,13 @@ swm_predict_sampled<-function(fit,d,ndraws=8000,seed=20260921) {
   pmf<-logpmf<-vector('list',nrow(d))
   for(i in seq_len(nrow(d))) {
     p<-pars[[i]]
-    logP<-vapply(0:p$grid,function(k)swm_logpmf(k,p$mu,p$phi,p$grid,p$zi),numeric(ndraws))
+    # Keep the linear predictors: inverse-logit rounding can erase a positive
+    # beta shape or mixture tail even though the original logits are finite.
+    eta<-matrix(brms::get_dpar(prep,'mu',i=i,inv_link=FALSE),ncol=1L)
+    zero_eta<-matrix(brms::get_dpar(prep,'zi',i=i,inv_link=FALSE),ncol=1L)
+    phi<-matrix(p$phi,ncol=1L)
+    logP<-vapply(0:p$grid,function(k)as.numeric(swm_state_log_probabilities(
+      k,eta,phi,zero_eta,'beta',p$grid)$mass),numeric(ndraws))
     P<-exp(logP)
     if(any(!is.finite(P))||any(abs(rowSums(P)-1)>1e-6))stop('Predictive mass invalid')
     P<-P/rowSums(P);pmf[[i]]<-colMeans(P)
@@ -79,7 +109,10 @@ swm_predict_sampled<-function(fit,d,ndraws=8000,seed=20260921) {
   rows$Time_since_baseline_1y<-d$Time_since_baseline_1y
   lo<-mapply(function(p,k)if(k==0)0 else sum(p[seq_len(k)]),pmf,d$index)
   hi<-lo+mapply(function(p,k)p[k+1],pmf,d$index)
-  rows<-cbind(rows,pit_lo=lo,pit_hi=hi,swm_pit_moments(lo,hi))
+  ll<-mapply(function(p,k)swm_logsumexp(p[seq_len(k)]),logpmf,d$index)
+  lm<-mapply(function(p,k)p[k+1L],logpmf,d$index)
+  lu<-mapply(function(p,k)swm_logsumexp(if(k<length(p)-1L)p[seq.int(k+2L,length(p))]else numeric()),logpmf,d$index)
+  rows<-cbind(rows,pit_lo=lo,pit_hi=hi,swm_pit_moments(lo,hi,ll,lm,lu))
   list(model='normative',row_ids=d$row_id_global,pmf=pmf,
     rows=rows,prediction_seed=seed,ndraws=ndraws)
 }

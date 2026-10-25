@@ -15,6 +15,12 @@ local({
   }
   for (path in list(NA_character_, "", " ", character(), c("one", "two"), 3))
     rejected(cantab_output_directory(path, repo), "Supply one output")
+  # POSIX treats drive-prefixed paths as relative; accepting them as absolute
+  # could put a run inside the code repository when it is the working directory.
+  if (.Platform$OS.type != "windows") {
+    for (path in c("C:/new_output", "C:\\new_output", "z:/", "z:\\"))
+      rejected(cantab_output_directory(path, repo), "Windows drive paths")
+  }
   for (path in c(repo, file.path(repo, "new", "nested"),
                  file.path(work, "output", "..", "working_directory", "new")))
     rejected(cantab_output_directory(path, repo), "outside the public repository")

@@ -60,7 +60,7 @@ summarize_calibration <- function(d, person_equal = FALSE) {
 summarize_prior_predictions <- function(fit, d, seed) {
     set.seed(seed)
     nd <- d
-    nd$Subject_ID <- factor(paste0("prior_new_", as.character(d$Subject_ID)))
+    nd$Subject_ID <- new_subject_ids(fit, as.character(d$Subject_ID), "prior_new_")
     prep <- prepare_predictions(fit, newdata = nd, re_formula = NULL, allow_new_levels = TRUE, sample_new_levels = "gaussian", 
         ndraws = min(1200, posterior::ndraws(fit)))
     pp <- posterior_predict(prep)
@@ -71,4 +71,3 @@ summarize_prior_predictions <- function(fit, d, seed) {
             fraction_gt1000 = mean(values > 1000, na.rm = TRUE), nonfinite_fraction = mean(!is.finite(values)))
     }))
 }
-

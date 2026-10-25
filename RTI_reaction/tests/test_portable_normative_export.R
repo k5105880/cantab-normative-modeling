@@ -63,6 +63,44 @@ stopifnot(identical(public$normative_z,
   ifelse(base$normative_z=='NA','',base$normative_z)),
   identical(public$raw_score,ifelse(base$NM_raw=='NA','',base$NM_raw)),
   identical(public$Subject_ID,base$Subject_ID))
+# Every visit can be ineligible for one HC participant. Only eligible HC
+# participants belong in the frozen folds; the unscored row must still export.
+extra_raw <- raw[nrow(raw),,drop=FALSE]
+extra_raw$Subject_ID <- 'synthetic_ineligible_HC';extra_raw$Diagnosis <- 'HC'
+extra_base <- base[nrow(base),,drop=FALSE]
+extra_base$Subject_ID <- extra_raw$Subject_ID;extra_base$Diagnosis <- 'HC'
+extra_base$row_id_global <- as.character(nrow(base)+1L)
+raw_with_ineligible <- rbind(raw,extra_raw)
+base_with_ineligible <- rbind(base,extra_base)
+refresh_fixture <- function(input_rows,score_rows) {
+  write.csv(input_rows,file.path(run,'source/input.csv'),row.names=FALSE)
+  write.csv(score_rows,file.path(run,'normative_all_rows_scores.csv'),row.names=FALSE)
+  jsonlite::write_json(list(mode='run',signature=list(config=list(version='reaction_normative_v1'),
+    input=hash(file.path(run,'source/input.csv')),folds=hash(file.path(run,'source/frozen_subject_folds.csv')))),
+    file.path(run,'manifest.json'),auto_unbox=TRUE)
+}
+refresh_fixture(raw_with_ineligible,base_with_ineligible)
+ineligible_out <- file.path(root,'ineligible_hc_analysis')
+rti_build_normative_csv(run,ineligible_out)
+ineligible_result <- read.csv(file.path(ineligible_out,'RTI_analysis_ready.csv'),
+  colClasses='character',na.strings=NULL,check.names=FALSE)
+stopifnot(nrow(ineligible_result)==25L,
+  ineligible_result$normative_z[25]=='NA',ineligible_result$normative_usable[25]=='FALSE',
+  ineligible_result$HC_oof_fold[25]=='NA',ineligible_result$covariate_reference_set[25]=='NA',
+  identical(ineligible_result$normative_z[1:24],base$normative_z))
+# All documented missing markers for Gender identify the same excluded value.
+for(marker in c('', 'NA', 'NaN')) {
+  missing_raw <- raw;missing_base <- base
+  missing_raw$Gender[nrow(raw)] <- marker;missing_base$Gender[nrow(base)] <- 'NA'
+  refresh_fixture(missing_raw,missing_base)
+  missing_out <- tempfile('missing_gender_',tmpdir=root)
+  rti_build_normative_csv(run,missing_out)
+  missing_result <- read.csv(file.path(missing_out,'RTI_analysis_ready.csv'),
+    colClasses='character',na.strings=NULL,check.names=FALSE)
+  stopifnot(identical(missing_result$normative_z,base$normative_z),
+    missing_result$Gender[nrow(base)]=='NA',missing_result$normative_usable[nrow(base)]=='FALSE')
+}
+refresh_fixture(raw,base)
 base$normative_posterior_mcse_z[1] <- 'NA'
 write.csv(base,file.path(run,'normative_all_rows_scores.csv'),row.names=FALSE)
 bad <- file.path(root,'bad_analysis')

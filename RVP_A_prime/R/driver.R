@@ -64,7 +64,7 @@ aprime_driver <- local({
     } else if(mode=='prior') {
       source(file.path(root,'R/prior_direct.R'),local=TRUE)
       fit<-read_accepted_fit(file.path(run_dir,'models/primary_full.rds'),identity)
-      run_prior_direct(fit,file.path(run_dir,'results/prior_direct'),draws=config$prior$draws,seed=config$seed,batch_size=config$prior$batch_size)
+      run_prior_direct(fit,file.path(run_dir,'results/prior_direct'),draws=config$prior$draws,seed=config$seed,batch_size=config$prior$batch_size,training_data=prepared$hc)
     } else if(mode=='calibrate') {
       calibrate_scores(run_dir,config)
     } else if(mode=='verify_models') {

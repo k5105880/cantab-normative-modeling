@@ -1,11 +1,11 @@
 {
-  "date": "2026-10-21",
-  "version": "2026.10.21-r12",
+  "date": "2026-10-25",
+  "version": "2026.10.25-r13",
   "scope": "Six outcome-specific normative modeling workflows in R",
   "current_R_source_files": 138,
   "last_full_software_validation": {
-    "version": "2026.10.21-r8",
-    "date": "2026-10-21",
+    "version": "2026.10.25-r13",
+    "date": "2026-10-25",
     "public_test_scripts": [
       {
         "path": "tests/test_input_data.R",
@@ -219,7 +219,14 @@
       }
     ],
     "production_MCMC": false,
-    "subsequent_changes": "Documentation, example comments, citation and distribution metadata only; executable analysis expressions and model settings are unchanged."
+    "regression_coverage": [
+      "Reaction export retains HC participants without any eligible visits and accepts all documented missing-gender markers.",
+      "Movement and latency convergence gates reject undefined diagnostics for sampled parameters while excluding structural Cholesky constants.",
+      "A-prime direct prior simulation supports the existing zero-, one- and two-spline designs, constant IQ and intercept-only phi; full training data preserve platform summaries.",
+      "SWM sampled predictions cannot confuse synthetic new-participant labels with training IDs.",
+      "Strategy calibration retains tiny tail probabilities and finite extreme logits; complete-PMF moment identities and independent high-precision references are checked.",
+      "POSIX output-path validation rejects Windows drive-absolute syntax before repository-containment checks."
+    ]
   },
   "earlier_model_and_numerical_checks": {
     "scope": "All six outcomes; full healthy-control models and all five training folds",
@@ -240,13 +247,15 @@
       "errors": []
     },
     "R_example_syntax": "PASS: 21 examples parsed",
-    "executable_R_expressions": "PASS: all 138 R files identical to preceding version after ignoring comments",
-    "model_configuration_and_installation_code": "PASS: byte-identical to preceding version",
+    "model_configuration_and_installation_code": "PASS: byte-identical to the audited GitHub baseline",
     "citation": "PASS: required and allowed CFF v1.2.0 fields, repository URL, version, date, MIT license and single author checked",
     "file_integrity_verifier": "scripts/verify_release.R",
     "file_manifest": "RELEASE_MANIFEST.json",
     "source_manifest": "provenance/source_manifest.csv",
-    "citation_checked_on": "2026-10-25"
+    "citation_checked_on": "2026-10-25",
+    "model_formula_prior_sampling_and_primary_score_definitions": "PASS: unchanged from the audited GitHub baseline",
+    "default_A_prime_prior_equivalence": "PASS: two-spline parameter draws, random-number state and linear predictors bitwise identical",
+    "audited_GitHub_commit": "c3ce6fd1f15986d851c457f021e5700e4b6d3f84"
   },
   "environment": {
     "R": "4.6.1",
@@ -255,7 +264,6 @@
     "execution_host": "Linux"
   },
   "limitations": [
-    "The full software test suite and no-MCMC entry-point checks were not repeated for this documentation and distribution revision.",
     "No new production MCMC fit or posterior-convergence assessment was performed for these distribution revisions.",
     "Native Windows and macOS execution was not available for testing.",
     "Synthetic checks and model comparisons do not establish suitability for a new dataset.",

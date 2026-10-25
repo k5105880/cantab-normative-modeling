@@ -208,11 +208,22 @@ diagnose_brms_fit <- function(fit, outcome_prefix, family_id, model_label) {
     min_ess_bulk <- NA_real_
     min_ess_tail <- NA_real_
     if (!is.null(draws)) {
+        # Only the first Cholesky diagonal and upper triangle are deterministic.
+        # Undefined diagnostics for any other parameter must fail the gate.
+        variables <- posterior::variables(draws)
+        cholesky <- grep("^L_[0-9]+\\[[0-9]+,[0-9]+\\]$", variables, value = TRUE)
+        structural <- vapply(cholesky, function(variable) {
+            ij <- as.integer(strsplit(gsub(".*\\[|\\]", "", variable), ",")[[1L]])
+            ij[1L] < ij[2L] || all(ij == 1L)
+        }, logical(1))
+        if (any(structural))
+            draws <- posterior::subset_draws(draws, variable = setdiff(variables, cholesky[structural]))
         conv <- tryCatch(posterior::summarise_draws(draws, "rhat", "ess_bulk", "ess_tail"), error = function(e) NULL)
-        if (!is.null(conv)) {
-            max_rhat <- suppressWarnings(max(conv$rhat, na.rm = TRUE))
-            min_ess_bulk <- suppressWarnings(min(conv$ess_bulk, na.rm = TRUE))
-            min_ess_tail <- suppressWarnings(min(conv$ess_tail, na.rm = TRUE))
+        if (!is.null(conv) && nrow(conv) > 0L &&
+            all(is.finite(as.matrix(conv[c("rhat", "ess_bulk", "ess_tail")])))) {
+            max_rhat <- max(conv$rhat)
+            min_ess_bulk <- min(conv$ess_bulk)
+            min_ess_tail <- min(conv$ess_tail)
         }
     }
     data.frame(outcome = outcome_prefix, family_id = family_id, model_label = model_label, n_divergent = n_divergent, 
@@ -592,4 +603,3 @@ run_prior_predictive_check <- function(model_dat, definition, spec, selected_fam
         prior_pred_q99 = unname(qs[5]), prior_pred_prop_below_observed_min = mean(vals < min(obs)), prior_pred_prop_above_observed_max = mean(vals > 
             max(obs)), stringsAsFactors = FALSE)
 }
-

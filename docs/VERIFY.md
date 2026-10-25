@@ -15,9 +15,9 @@ source("scripts/verify_release.R")
 
 ## Verified scope
 
-The last full software validation passed all 43 tests and all six entry points in `mode = "check"`, including input, model-design and Stan-syntax checks without MCMC. These checks were performed for version `2026.10.21-r8`. Subsequent documentation and packaging revisions leave the executable analysis code and model settings unchanged. The current distribution is checked separately for file integrity, documentation links and R example syntax.
+Validation on 25 October 2026 passed all 43 test scripts and all six entry points in `mode = "check"` for version `2026.10.25-r13`, including input, model-design and Stan-syntax checks without MCMC. Regression checks cover missing-row exports, undefined convergence diagnostics, data-dependent A-prime prior simulations, new-participant prediction labels, extreme probability tails and output-path validation. The distribution is also checked for file integrity, documentation links and R example syntax.
 
-Model validation also included comparisons of formulas, priors, generated Stan code and Stan data for the full-control fit and all five training folds. Deterministic numerical calculations, available saved synthetic-fit predictions and completed score exports were compared. The [validation record](../provenance/validation_report.json) distinguishes these earlier checks from checks performed for the current distribution.
+Earlier model validation also included comparisons of formulas, priors, generated Stan code and Stan data for the full-control fit and all five training folds. Deterministic numerical calculations, available saved synthetic-fit predictions and completed score exports were compared. The current checks confirm that model formulas, priors, sampling settings and primary normative-score definitions are unchanged. For the existing two-spline A-prime model, independent prior parameter draws, the random-number state and linear predictors match the preceding implementation exactly. The [validation record](../provenance/validation_report.json) distinguishes earlier comparisons from checks performed for the current distribution.
 
 ## Limits and checks for your data
 

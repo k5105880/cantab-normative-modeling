@@ -41,7 +41,7 @@ rti_build_normative_csv <- function(run, out) {
   need(!anyDuplicated(eligible) && all(eligible %in% order), 'Normative prediction coverage invalid')
   need(all(base$model=='normative' & base$analysis_mode=='run'), 'Unexpected normative model')
   for (field in c('Subject_ID','Diagnosis','Platform','Gender'))
-    need(identical(base[[field]], ifelse(raw[[field]]=='','NA',raw[[field]])),
+    need(identical(base[[field]], ifelse(raw[[field]] %in% c('','NA','NaN'),'NA',raw[[field]])),
          paste('Raw input identity mismatch:',field))
   need(all(num(base$Timepoint)==num(raw$Timepoint)), 'Visit identity mismatch')
   a <- num(base$NM_raw); b <- num(raw[['RTI_Median_five-choice_reaction_time']])
@@ -75,10 +75,10 @@ rti_build_normative_csv <- function(run, out) {
   }
   rows <- base[,names(base)!='model',drop=FALSE]
   fold <- ifelse(is_hc,fold_for(base$Subject_ID),0L)
-  need(!anyNA(fold), 'HC absent from frozen fold map')
-  ref <- ifelse(is_hc,paste0('HC_fold_',fold,'_training'),'full_HC')
+  need(!anyNA(fold[order %in% eligible]), 'HC absent from frozen fold map')
+  ref <- ifelse(is.na(fold),'NA',ifelse(is_hc,paste0('HC_fold_',fold,'_training'),'full_HC'))
   rows$is_HC <- flag(is_hc); rows$is_baseline <- flag(num(base$Timepoint)==1)
-  rows$HC_oof_fold <- ifelse(is_hc,as.character(fold),'NA')
+  rows$HC_oof_fold <- ifelse(is_hc & !is.na(fold),as.character(fold),'NA')
   rows$covariate_reference_set <- ref; rows$normative_model <- 'normative'
   finite <- is.finite(num(base$normative_z))
   numeric_ok <- base$normative_numerical_ok=='TRUE'; mc_ok <- base$normative_posterior_mc_ok=='TRUE'

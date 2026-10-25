@@ -46,4 +46,43 @@ before <- digest::digest(file=f,algo="sha256")
 check(inherits(try(read_accepted_fit(f,"expected"),silent=TRUE),"try-error"),"corrupt fit hash rejected")
 check(identical(before,digest::digest(file=f,algo="sha256")),"cache rejection is read-only")
 unlink(f)
+source(file.path(root,"R/prior_direct.R"))
+# The prior simulation must accept every identifiable design allowed by build_model,
+# including data-dependent linear terms and a constant IQ predictor.
+for (scenario in c("full", "linear_time", "linear_age", "linear_both", "constant_iq", "intercept_phi")) {
+  x <- d
+  if (scenario %in% c("linear_time", "linear_both")) {
+    x <- droplevels(x[rep(c(TRUE,TRUE,TRUE,FALSE),40),])
+    x$Time_since_baseline_1y <- rep(c(0,1,2),40)
+    x$Time_since_baseline_1y[seq(6,120,6)] <- 3
+  }
+  if (scenario %in% c("linear_age", "linear_both"))
+    x$Age_baseline_10y <- (as.integer(x$Subject_ID) %% 4)-2
+  if (scenario=="constant_iq") x$FSIQ_15 <- 0
+  if (scenario=="intercept_phi") {
+    x$Platform <- factor("Connect"); x$Practice_bin <- factor("0_baseline")
+    x$PlatformConnect_indicator <- 1
+  }
+  model <- build_model(x)
+  model_design_audit(model,x)
+  # Generate the real brms model and Stan data without compilation or sampling.
+  fit <- brms::brm(model$formula,data=x,prior=model$prior,family=model$family,empty=TRUE)
+  directory <- tempfile(paste0("prior_",scenario,"_"))
+  result <- suppressWarnings(run_prior_direct(fit,directory,draws=2000L,batch_size=500L,training_data=x))
+  check(all(is.finite(result$rates$mean)) && all(is.finite(result$quantiles$prior_predictive_quantile)),
+        paste("complete direct prior simulation:",scenario))
+  check(setequal(unique(result$rates$platform),c("All",as.character(unique(x$Platform)))),
+        paste("platform summaries preserved:",scenario))
+  wrong_rows <- x[rev(seq_len(nrow(x))),]
+  check(inherits(try(run_prior_direct(fit,directory,draws=2000L,batch_size=500L,
+                                     training_data=wrong_rows),silent=TRUE),"try-error"),
+        paste("mismatched prior-summary rows rejected:",scenario))
+  # A changed prior must still be rejected, rather than silently simulated with
+  # the original primitive distribution.
+  changed <- fit
+  changed$model <- sub("normal_lpdf(b | 0, 0.5)","normal_lpdf(b | 0, 2)",fit$model,fixed=TRUE)
+  check(inherits(try(validate_prior_model(changed),silent=TRUE),"try-error"),
+        paste("changed prior rejected:",scenario))
+  unlink(directory,recursive=TRUE)
+}
 cat("ALL MODEL TESTS PASSED\n")

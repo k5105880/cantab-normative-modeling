@@ -65,3 +65,40 @@ local({
  }
 })
 cat('PASS: mixed/all-control score routing, required outputs, exact raw-value export, orchestration seeds, checkpoint reuse and changed-training rejection.\n')
+
+# A failed coefficient diagnostic must not disappear in an na.rm summary.
+# Synthetic draws keep posterior diagnostics real without running a sampler.
+set.seed(445)
+diagnostic_draws <- array(rnorm(1000L*4L*5L),c(1000L,4L,5L),
+  dimnames=list(NULL,NULL,c('b_Intercept','b_FSIQ_15','L_1[1,1]','L_1[1,2]','L_1[2,1]')))
+diagnostic_draws[,,'L_1[1,1]'] <- 1
+diagnostic_draws[,,'L_1[1,2]'] <- 0
+sampler <- expand.grid(Iteration=1:1000,Chain=1:4,
+  Parameter=c('energy__','divergent__','treedepth__'),stringsAsFactors=FALSE)
+sampler$Value <- ifelse(sampler$Parameter=='energy__',rnorm(nrow(sampler)),
+  ifelse(sampler$Parameter=='treedepth__',3,0))
+as_draws_df.normative_diagnostic_fixture <- function(x,...)posterior::as_draws_df(x$draws)
+nuts_params.normative_diagnostic_fixture <- function(object,...)object$sampler
+local({
+  diagnostic <- new.env(parent=globalenv())
+  prefix <- if(basename(here)=='RTI_movement')'rti' else 'rvp'
+  source(file.path(here,'model_functions.R'),local=diagnostic)
+  source(file.path(here,paste0(prefix,'_validation_helpers.R')),local=diagnostic)
+  diagnostic$max_treedepth_fit <- 20
+  check_draws <- function(draws) {
+    fit <- structure(list(draws=posterior::as_draws_array(draws),sampler=sampler),
+      class='normative_diagnostic_fixture')
+    result <- diagnostic$diagnose_brms_fit(fit,basename(here),'fixture','random_slope')
+    diagnostic[[paste0(prefix,'_add_bfmi')]](result,fit)
+  }
+  # Cholesky's first diagonal and upper triangle are deterministic by design.
+  stopifnot(check_draws(diagnostic_draws)$validation_pass)
+  stalled <- diagnostic_draws;stalled[,,'b_FSIQ_15'] <- 0
+  stopifnot('A constant sampled coefficient must fail diagnostics' =
+    !check_draws(stalled)$validation_pass)
+  # A lower-triangular Cholesky element is sampled and must not be exempted.
+  stalled <- diagnostic_draws;stalled[,,'L_1[2,1]'] <- 0
+  stopifnot('A constant sampled Cholesky element must fail diagnostics' =
+    !check_draws(stalled)$validation_pass)
+})
+cat('PASS: nonfinite coefficient diagnostics fail; only deterministic Cholesky entries are exempt.\n')

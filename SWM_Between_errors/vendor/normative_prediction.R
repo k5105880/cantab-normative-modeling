@@ -51,10 +51,16 @@ pit_moments <- function(lower, mass, upper) {
         pmax(0, (pnorm(1.96, lower.tail = FALSE) - upper)/mass)))
 }
 
+new_subject_ids <- function(fit, ids, prefix) {
+    known <- union(as.character(fit$data$Subject_ID), levels(fit$data$Subject_ID))
+    while (any(paste0(prefix, ids) %in% known)) prefix <- paste0(prefix, "_")
+    factor(paste0(prefix, ids))
+}
+
 predict_normative_coverage <- function(fit, data, seed, ndraws = 8000, coverage = FALSE) {
     set.seed(seed)
     nd <- data
-    nd$Subject_ID <- factor(paste0("new_subject_", as.character(nd$Subject_ID)))
+    nd$Subject_ID <- new_subject_ids(fit, as.character(nd$Subject_ID), "new_subject_")
     out <- list()
     gd <- getFromNamespace("get_dpar", "brms")
     for (ix in split(seq_len(nrow(nd)), ceiling(seq_len(nrow(nd))/120))) {

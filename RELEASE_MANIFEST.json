@@ -1,6 +1,6 @@
 {
-  "version": "2026.10.21-r12",
-  "date": "2026-10-21",
+  "version": "2026.10.25-r13",
+  "date": "2026-10-25",
   "scope": "Six normative modeling workflows in R",
   "archive_root": "working_directory",
   "files": [
@@ -17,7 +17,7 @@
     {
       "path": "CITATION.cff",
       "bytes": 601,
-      "sha256": "1b134df20c44f4a52f6cfe46c9db4463d148c7de644ef9b9489a6eee0e09abfe"
+      "sha256": "9b84cc043c0a80a2ab128da3553e5b587ef4340cb2ffaffd7253723fda82dc68"
     },
     {
       "path": "LICENSE",
@@ -26,8 +26,8 @@
     },
     {
       "path": "R/input_data.R",
-      "bytes": 17086,
-      "sha256": "0df1a0e3c767e9c903c7f4e0fddfb5f0c4638c0dedda029784f8329163b5ec9a"
+      "bytes": 17290,
+      "sha256": "24673f3af3b62c8be28e7ec9e22745032f623d182202782ba172d60506986cdd"
     },
     {
       "path": "R/results.R",
@@ -76,8 +76,8 @@
     },
     {
       "path": "RTI_movement/model_functions.R",
-      "bytes": 29699,
-      "sha256": "9a60f32d3700b34a3f3d4a0d214dfafc3cc575e83152b1a06cabb513dd7ecb13"
+      "bytes": 30337,
+      "sha256": "31948102ecf6638c64d09a160b8c1382334921bd349c9dfbdacc0bbe3d8c3321"
     },
     {
       "path": "RTI_movement/model_settings.R",
@@ -141,8 +141,8 @@
     },
     {
       "path": "RTI_movement/test_pipeline.R",
-      "bytes": 4394,
-      "sha256": "899cd0997791f201264e27d2043847b7ca3f96b75a3dacf347529ad29668fef6"
+      "bytes": 6478,
+      "sha256": "f04d2ba7a29c2d45c07cf8c345e1775111339b2210ca1c476f02acacba52c27c"
     },
     {
       "path": "RTI_movement/test_portable_input.R",
@@ -166,8 +166,8 @@
     },
     {
       "path": "RTI_reaction/build_normative_csv.R",
-      "bytes": 8831,
-      "sha256": "8b0ea3843b968ef5a9bfd0fbd57ca6bcc31ae14233ce4f3aee4ed5b7b2c4809b"
+      "bytes": 8910,
+      "sha256": "2521f0241bd79efd3cdb17a2c62431d5e671a437ef6848f664e852eb5b12ae81"
     },
     {
       "path": "RTI_reaction/cantab_design_audit.R",
@@ -231,8 +231,8 @@
     },
     {
       "path": "RTI_reaction/tests/test_portable_normative_export.R",
-      "bytes": 4627,
-      "sha256": "b57b9b4938a9259b5f2456ac248c5f804c56c40daaf6bbde49383f4ced0d1f7f"
+      "bytes": 6956,
+      "sha256": "7c508a8d9259249297bbc99da119b46bc94c4a37f43ba1c3f7aa573ce162e9fb"
     },
     {
       "path": "RTI_reaction/tests/test_time_identifiability.R",
@@ -251,8 +251,8 @@
     },
     {
       "path": "RVP_A_prime/R/driver.R",
-      "bytes": 6255,
-      "sha256": "ec79613602c9bab681ff86d844b78f33d71b23c9b337958c7bbbdbf35cbe6781"
+      "bytes": 6281,
+      "sha256": "d1482d3f22d2ed2e2b684dfc7cbc1533b54021690e57009b65d36e9751bdd716"
     },
     {
       "path": "RVP_A_prime/R/fit_models.R",
@@ -291,8 +291,8 @@
     },
     {
       "path": "RVP_A_prime/R/prior_direct.R",
-      "bytes": 20012,
-      "sha256": "d6f63f530e3c7016acebe7992ff061cf39a7d5e85c0cdd243fa0ca69a297b3ab"
+      "bytes": 21517,
+      "sha256": "9296e6936878c2614ec94e5d3c42312e54f2e10629e5cc21a25e0691bd324461"
     },
     {
       "path": "RVP_A_prime/R/scoring.R",
@@ -336,8 +336,8 @@
     },
     {
       "path": "RVP_A_prime/tests/test_models.R",
-      "bytes": 2808,
-      "sha256": "05b964816c9373a8a07f28cd3ba61fe6ca3bc029cf0931541b2314bce363f354"
+      "bytes": 5023,
+      "sha256": "2c259b30a198236e6df07e39a0cf8693e8774e1f3204af718f9e02e13d1160c6"
     },
     {
       "path": "RVP_A_prime/tests/test_portable_pipeline.R",
@@ -406,8 +406,8 @@
     },
     {
       "path": "RVP_latency/model_functions.R",
-      "bytes": 29964,
-      "sha256": "876569fa76188b84f00e0a395e4dbb42be571a2e672816c196916bfb66daa3d3"
+      "bytes": 30602,
+      "sha256": "d661b34b2803c92d5a8728643b17e60aa7e42da1754925ed63834baeb7200a4e"
     },
     {
       "path": "RVP_latency/model_settings.R",
@@ -466,8 +466,8 @@
     },
     {
       "path": "RVP_latency/test_pipeline.R",
-      "bytes": 4394,
-      "sha256": "899cd0997791f201264e27d2043847b7ca3f96b75a3dacf347529ad29668fef6"
+      "bytes": 6478,
+      "sha256": "f04d2ba7a29c2d45c07cf8c345e1775111339b2210ca1c476f02acacba52c27c"
     },
     {
       "path": "RVP_latency/test_source_isolation.R",
@@ -482,7 +482,7 @@
     {
       "path": "SHA256SUMS",
       "bytes": 17152,
-      "sha256": "9af9ec9861c4ed0dfa54a4ae4cd35d7a04b2b46f07af3d7c91b3066577c68ba2"
+      "sha256": "ccc1d95bcbc808b9fd94b2d75fccfd4679edd51291bf709f7cf4a745355f044f"
     },
     {
       "path": "SWM_Between_errors/R/bootstrap.R",
@@ -571,8 +571,8 @@
     },
     {
       "path": "SWM_Between_errors/tests/test_state_offset.R",
-      "bytes": 1237,
-      "sha256": "9b5686eb4c540e6c7c095aa160320ac04e8db76a4cc346ee3142f83fbf9d91af"
+      "bytes": 2611,
+      "sha256": "06610d0c4e24515cee13119e9eaef6d16ffaf73aa174d326685888c80ea69b0d"
     },
     {
       "path": "SWM_Between_errors/tests/test_state_precision.R",
@@ -581,8 +581,8 @@
     },
     {
       "path": "SWM_Between_errors/vendor/calibration.R",
-      "bytes": 3485,
-      "sha256": "1521f66f92a67b25a516be4c5d5836084b26c88c32c58c4b5d7e24476a6e92e8"
+      "bytes": 3490,
+      "sha256": "a6cc41bbe988fa162b00e7212940fbb2d919eed0abb7d7ca6f3bf260ee046790"
     },
     {
       "path": "SWM_Between_errors/vendor/common_model_definitions.R",
@@ -611,8 +611,8 @@
     },
     {
       "path": "SWM_Between_errors/vendor/normative_prediction.R",
-      "bytes": 5101,
-      "sha256": "64ebe823b36f36da871fe5f138db19f94a7c71dcab18ee824b436d08c60e165c"
+      "bytes": 5351,
+      "sha256": "a56c8eba6eeaa93eb09259a025b96976f2b5d6559f006ff488ef646602ef077e"
     },
     {
       "path": "SWM_Between_errors/vendor/probability_scores.R",
@@ -636,8 +636,8 @@
     },
     {
       "path": "SWM_Strategy/R/swm_core.R",
-      "bytes": 5430,
-      "sha256": "8ee9003cbada5a7ef000b553ca6b823375614ba539ae05936904dc3a993139cf"
+      "bytes": 7336,
+      "sha256": "3430b2815a354c0c692fdee1351f6dd4bd0a2624c81c30116b9d617e8a9643d2"
     },
     {
       "path": "SWM_Strategy/R/swm_diagnostics.R",
@@ -716,8 +716,8 @@
     },
     {
       "path": "SWM_Strategy/tests/test_runtime.R",
-      "bytes": 3684,
-      "sha256": "00f70e96ec7f35bac2171e1d6dc586904865166ca82f80d47c122de2908ba5d3"
+      "bytes": 6678,
+      "sha256": "e2074896c7d86a8f4477906a2c7a0215912264120ce1fb2fab0b182425c13edf"
     },
     {
       "path": "SWM_Strategy/tests/test_state_precision.R",
@@ -726,8 +726,8 @@
     },
     {
       "path": "SWM_Strategy/tests/test_state_tails.R",
-      "bytes": 1670,
-      "sha256": "bbb8194615f5654ac829223d7de5c91c65333905246fcfaa5abac26dc773caba"
+      "bytes": 3626,
+      "sha256": "2c57f19a60a53183a1c90c91c7ccc1408e28d7c36bb84dd8f8721fb355c8f2cd"
     },
     {
       "path": "data/README.md",
@@ -801,8 +801,8 @@
     },
     {
       "path": "docs/VERIFY.md",
-      "bytes": 2482,
-      "sha256": "52ea2aedc5aad9b5bd971eaab1cb234c9d9e50610bb32fdd196757cbd33f6000"
+      "bytes": 2844,
+      "sha256": "2579e7f9e15bc9de51e9067a30892c108668c4f3d2e6fcaca3d2075a50cd578d"
     },
     {
       "path": "docs/outcomes.csv",
@@ -837,12 +837,12 @@
     {
       "path": "provenance/source_manifest.csv",
       "bytes": 14678,
-      "sha256": "6a1e55acdd167f1f672b568bfc172ee262ec74f9ccd2caedfc86b35980078f1d"
+      "sha256": "eac55ca3555f7a9a3fbde8d1d7e520feb89ab1a4357fa28e1d2d1484242affe1"
     },
     {
       "path": "provenance/validation_report.json",
-      "bytes": 7577,
-      "sha256": "8a072dbcd8fcb9d342731dfab098febee283009de0cbff882ac7bf74fc15a2a6"
+      "bytes": 8383,
+      "sha256": "5bb753057da78197a860d44112dc0c1391fcc8fed7272e84e847265bc260b089"
     },
     {
       "path": "run_analysis.R",
@@ -886,8 +886,8 @@
     },
     {
       "path": "tests/test_output_paths.R",
-      "bytes": 2657,
-      "sha256": "31665360753dec4528aca493efe1ba8515211db4c0a912fb6f40b4be44474b4e"
+      "bytes": 3005,
+      "sha256": "3a6ef645c29c050b1010ded75ced080da043d54efda6527c248539565019d7f9"
     },
     {
       "path": "tests/test_results.R",
