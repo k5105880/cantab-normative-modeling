@@ -1,6 +1,6 @@
 {
-  "version": "2026.10.25-r13",
-  "date": "2026-10-25",
+  "version": "2026.10.28-r14",
+  "date": "2026-10-28",
   "scope": "Six normative modeling workflows in R",
   "archive_root": "working_directory",
   "files": [
@@ -17,7 +17,7 @@
     {
       "path": "CITATION.cff",
       "bytes": 601,
-      "sha256": "9b84cc043c0a80a2ab128da3553e5b587ef4340cb2ffaffd7253723fda82dc68"
+      "sha256": "acb545a6d8219321ae53af6d2ae9d540c41a0e90b44bd2988be77c1df2469e84"
     },
     {
       "path": "LICENSE",
@@ -241,8 +241,8 @@
     },
     {
       "path": "RVP_A_prime/R/calibration.R",
-      "bytes": 2970,
-      "sha256": "45716d4bef506c85d36d1dd17ee3e62a4628b84c607d35fbb28f37349340af4a"
+      "bytes": 4676,
+      "sha256": "109f572a0a1c9e2f05f82398fe1573b607f38a9a02c5567991e69eeb9880ee15"
     },
     {
       "path": "RVP_A_prime/R/config.R",
@@ -276,8 +276,8 @@
     },
     {
       "path": "RVP_A_prime/R/precision_helpers.R",
-      "bytes": 4151,
-      "sha256": "2c4710e670bd6d398476ba0fb3523d72658a2a8c110db832957db26a262d83e3"
+      "bytes": 6618,
+      "sha256": "49dff0a084a3441b65444fb0977ff7bfa07a22ed68b76d86a027d7f2c1428edf"
     },
     {
       "path": "RVP_A_prime/R/prepare_data.R",
@@ -341,8 +341,8 @@
     },
     {
       "path": "RVP_A_prime/tests/test_portable_pipeline.R",
-      "bytes": 5738,
-      "sha256": "21874dea0d873c775dbd8849e87aecb1efdcd5765cdaef872c0319e981513cae"
+      "bytes": 5815,
+      "sha256": "e8e9983d96bf9a0286f5c7ba7aae42248d5847660e606493a6d344f04ec332d4"
     },
     {
       "path": "RVP_A_prime/tests/test_precision.R",
@@ -353,6 +353,11 @@
       "path": "RVP_A_prime/tests/test_prepare.R",
       "bytes": 3826,
       "sha256": "32ec8913418c2c485864cd4f51e155a4979e5693e45d7b5b23d690af1148a742"
+    },
+    {
+      "path": "RVP_A_prime/tests/test_probability_tails.R",
+      "bytes": 7700,
+      "sha256": "57f68306dc635def35114eaa5e01fbbd8b444d7a01bf7311b26543392eee56bc"
     },
     {
       "path": "RVP_A_prime/tests/test_reference_folds.R",
@@ -481,8 +486,8 @@
     },
     {
       "path": "SHA256SUMS",
-      "bytes": 17152,
-      "sha256": "ccc1d95bcbc808b9fd94b2d75fccfd4679edd51291bf709f7cf4a745355f044f"
+      "bytes": 17261,
+      "sha256": "6af201c1a018fd9bcf537b40ff6e8379a6086dd0ae7b64a7397f9f8fff71b1a2"
     },
     {
       "path": "SWM_Between_errors/R/bootstrap.R",
@@ -781,8 +786,8 @@
     },
     {
       "path": "docs/DIAGNOSTICS.md",
-      "bytes": 12939,
-      "sha256": "c5d3963854c4bd29ea67dd6f93f8b8e4554de7a205da4d683a6618897569bc9b"
+      "bytes": 13308,
+      "sha256": "fa541709d60a132c421324d5e1d38541c6ccbb36c0fe9b482bd5fa75b668db86"
     },
     {
       "path": "docs/PROVENANCE.md",
@@ -801,8 +806,8 @@
     },
     {
       "path": "docs/VERIFY.md",
-      "bytes": 2844,
-      "sha256": "2579e7f9e15bc9de51e9067a30892c108668c4f3d2e6fcaca3d2075a50cd578d"
+      "bytes": 3044,
+      "sha256": "173a3dffb50639063475d23f46f38aa6045d7c34f6906b0ca8146d00d8c7ea95"
     },
     {
       "path": "docs/outcomes.csv",
@@ -836,13 +841,13 @@
     },
     {
       "path": "provenance/source_manifest.csv",
-      "bytes": 14678,
-      "sha256": "eac55ca3555f7a9a3fbde8d1d7e520feb89ab1a4357fa28e1d2d1484242affe1"
+      "bytes": 14792,
+      "sha256": "36fdad13a77274c614bdc7dc4c79e22a5aca87d31ac336e6da7d3018acd41b9a"
     },
     {
       "path": "provenance/validation_report.json",
-      "bytes": 8383,
-      "sha256": "5bb753057da78197a860d44112dc0c1391fcc8fed7272e84e847265bc260b089"
+      "bytes": 9044,
+      "sha256": "d2102b774ec82ab68dd8027ffefd1bd8aa1530a76e89f078d34d6631998182e0"
     },
     {
       "path": "run_analysis.R",
@@ -856,8 +861,8 @@
     },
     {
       "path": "scripts/test_files.txt",
-      "bytes": 1525,
-      "sha256": "963f87c99166db12791ca5d1c45ebdc4fcab6ada45d7e3c9ec5513c01bce084d"
+      "bytes": 1568,
+      "sha256": "aa61447a25779f0b7a44b49ffad094251ce8e1230ff07613107f1e4db4aef98e"
     },
     {
       "path": "scripts/verify_release.R",

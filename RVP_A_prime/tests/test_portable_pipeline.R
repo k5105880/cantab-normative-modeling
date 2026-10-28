@@ -65,7 +65,8 @@ write.csv(data.frame(row_id_global=1:4,Subject_ID=rep(c('001','1'),each=2),
   Time_since_baseline_years=rep(c(0,1),2)),
   file.path(cal,'results/RVP_A_prime_scores.csv'),row.names=FALSE)
 write.csv(data.frame(row_id_global=1:4,role='normative_OOF_fold1',
-  p_lower=c(.2,.3,.7,.8),p_upper=c(.2,.3,.7,.8)),
+  p_lower=c(.2,.3,.7,.8),p_upper=c(.2,.3,.7,.8),
+  log_lower=log(c(.2,.3,.7,.8)),log_mass=-Inf,log_upper=log(c(.8,.7,.3,.2))),
   file.path(cal,'results/normative_score_precision.csv'),row.names=FALSE)
 calibrate_scores(cal,list(seed=20260922L,calibration_bootstraps=32L))
 summary<-read.csv(file.path(cal,'results/OOF_calibration.csv'))

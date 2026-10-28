@@ -80,6 +80,8 @@ Scoring additionally requires successful integration and finite posterior MCSE(z
 
 A scoring failure can stop final export. Keep its precision files and log, identify whether the issue is integration or posterior sampling, and review the settings before any new fit.
 
+A′'s precision table also contains `log_lower`, `log_mass` and `log_upper`: the natural logarithms of the predictive probabilities below, at and above the observed score. These preserve small tail and boundary probabilities for scoring and calibration when the displayed `p_lower` or `p_upper` rounds to 0 or 1. A log probability of `-Inf` denotes zero probability.
+
 ## 4. Examine held-out prediction, not only successful computation
 
 | Outcome | Calibration files to open | What to examine |

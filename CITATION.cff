@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite the software release and version used."
 title: "CANTAB normative modeling for six cognitive outcomes"
 type: software
-version: "2026.10.25-r13"
-date-released: "2026-10-25"
+version: "2026.10.28-r14"
+date-released: "2026-10-28"
 repository-code: "https://github.com/k5105880/cantab-normative-modeling"
 url: "https://github.com/k5105880/cantab-normative-modeling"
 license: MIT

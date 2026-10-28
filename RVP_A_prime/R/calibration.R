@@ -1,11 +1,41 @@
-pit_moments <- function(a,b) {
+pit_moments <- function(a,b,log_lower=log(a),log_mass=log(b-a),log_upper=log1p(-b)) {
   stopifnot(all(is.finite(a)&is.finite(b)&a>=0&b<=1&a<=b))
-  z<-qnorm((a+b)/2);m<-z;m2<-z^2;low<-as.numeric(a<.025);high<-as.numeric(a>.975)
-  ix<-which(b>a);za<-qnorm(a[ix]);zb<-qnorm(b[ix]);w<-b[ix]-a[ix]
-  ap<-ifelse(is.finite(za),za*dnorm(za),0);bp<-ifelse(is.finite(zb),zb*dnorm(zb),0)
-  m[ix]<-(dnorm(za)-dnorm(zb))/w;m2[ix]<-1+(ap-bp)/w
-  low[ix]<-pmax(0,pmin(b[ix],.025)-a[ix])/w
-  high[ix]<-pmax(0,b[ix]-pmax(a[ix],.975))/w
+  stopifnot(length(a)==length(b),all(lengths(list(log_lower,log_mass,log_upper))==length(a)))
+  logs<-c(log_lower,log_mass,log_upper)
+  stopifnot(!anyNA(logs),all(logs<=0),
+    all(abs(aprime_logadd(aprime_logadd(log_lower,log_mass),log_upper))<1e-10))
+  z<-aprime_normal_quantile(aprime_logadd(log_lower,log_mass-log(2)),
+    aprime_logadd(log_upper,log_mass-log(2)))
+  m<-z;m2<-z^2
+  low<-as.numeric(log_lower<log(.025));high<-as.numeric(log_upper<log(.025))
+  nodes<-(c(-.906179845938664,-.538469310105683,0,.538469310105683,.906179845938664)+1)/2
+  weights<-c(.236926885056189,.478628670499366,.568888888888889,.478628670499366,.236926885056189)/2
+  for(i in which(is.finite(log_mass))) {
+    ll<-log_lower[i];lm<-log_mass[i];lu<-log_upper[i]
+    if(lm<min(ll,lu)+log(1e-3)) {
+      # Avoid cancellation between almost equal endpoint densities.
+      q<-aprime_normal_quantile(aprime_logadd(ll,lm+log(nodes)),
+        aprime_logadd(lu,lm+log1p(-nodes)))
+      m[i]<-sum(weights*q);m2[i]<-sum(weights*q*q)
+    } else {
+      za<-aprime_normal_quantile(ll,aprime_logadd(lm,lu))
+      zb<-aprime_normal_quantile(aprime_logadd(ll,lm),lu)
+      da<-if(is.finite(za))exp(dnorm(za,log=TRUE)-lm)else 0
+      db<-if(is.finite(zb))exp(dnorm(zb,log=TRUE)-lm)else 0
+      m[i]<-da-db
+      m2[i]<-1+(if(is.finite(za))za*da else 0)-(if(is.finite(zb))zb*db else 0)
+    }
+    m2[i]<-max(m2[i],m[i]^2)
+    # Fraction of the PIT interval below/above the 2.5% tail thresholds.
+    fraction<-function(log_start,log_width) {
+      cutoff<-log(.025)
+      if(log_start>=cutoff)return(0)
+      if(aprime_logadd(log_start,log_width)<=cutoff)return(1)
+      exp(cutoff+log(-expm1(log_start-cutoff))-log_width)
+    }
+    low[i]<-fraction(ll,lm);high[i]<-fraction(lu,lm)
+  }
+  if(any(!is.finite(c(m,m2,low,high))))stop('Nonfinite randomized-PIT moments')
   data.frame(m=m,m2=m2,low=low,high=high)
 }
 calibrate_scores <- function(run_dir,config) {
@@ -17,7 +47,9 @@ calibrate_scores <- function(run_dir,config) {
   for(metric in names(sets)) {
     v<-sets[[metric]];a<-d[match(v$row_id_global,d$row_id_global),]
     stopifnot(nrow(v)>0,all(a$Diagnosis=='HC'),!anyDuplicated(a$row_id_global))
-    a<-cbind(a,pit_moments(v$p_lower,v$p_upper));a$metric<-metric
+    required<-c('log_lower','log_mass','log_upper')
+    if(!all(required%in%names(v)))stop('Calibration requires log probabilities from the current scorer')
+    a<-cbind(a,pit_moments(v$p_lower,v$p_upper,v$log_lower,v$log_mass,v$log_upper));a$metric<-metric
     moments[[metric]]<-a[c('row_id_global','Subject_ID','Platform','Practice_bin','metric','m','m2','low','high')]
     groups<-list(overall=rep('all',nrow(a)),platform=a$Platform,platform_practice=paste(a$Platform,a$Practice_bin),
       followup_window=ifelse(a$Time_since_baseline_years==0,'baseline',ifelse(a$Time_since_baseline_years<=5,'0_to_5_years','over_5_years')))

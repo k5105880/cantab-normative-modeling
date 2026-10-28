@@ -14,6 +14,7 @@ RVP_A_prime/tests/test_config.R
 RVP_A_prime/tests/test_models.R
 RVP_A_prime/tests/test_portable_pipeline.R
 RVP_A_prime/tests/test_precision.R
+RVP_A_prime/tests/test_probability_tails.R
 RVP_A_prime/tests/test_prepare.R
 RVP_A_prime/tests/test_reference_folds.R
 RVP_A_prime/tests/test_source_isolation.R

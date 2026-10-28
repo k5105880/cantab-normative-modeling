@@ -1,11 +1,11 @@
 {
-  "date": "2026-10-25",
-  "version": "2026.10.25-r13",
+  "date": "2026-10-28",
+  "version": "2026.10.28-r14",
   "scope": "Six outcome-specific normative modeling workflows in R",
-  "current_R_source_files": 138,
+  "current_R_source_files": 139,
   "last_full_software_validation": {
-    "version": "2026.10.25-r13",
-    "date": "2026-10-25",
+    "version": "2026.10.28-r14",
+    "date": "2026-10-28",
     "public_test_scripts": [
       {
         "path": "tests/test_input_data.R",
@@ -73,6 +73,10 @@
       },
       {
         "path": "RVP_A_prime/tests/test_precision.R",
+        "status": "PASS"
+      },
+      {
+        "path": "RVP_A_prime/tests/test_probability_tails.R",
         "status": "PASS"
       },
       {
@@ -225,7 +229,8 @@
       "A-prime direct prior simulation supports the existing zero-, one- and two-spline designs, constant IQ and intercept-only phi; full training data preserve platform summaries.",
       "SWM sampled predictions cannot confuse synthetic new-participant labels with training IDs.",
       "Strategy calibration retains tiny tail probabilities and finite extreme logits; complete-PMF moment identities and independent high-precision references are checked.",
-      "POSIX output-path validation rejects Windows drive-absolute syntax before repository-containment checks."
+      "POSIX output-path validation rejects Windows drive-absolute syntax before repository-containment checks.",
+      "A-prime scoring retains both probability tails and boundary masses in logarithmic form through quadrature, posterior averaging, MCSE and randomized-PIT calibration. Tests use actual brms prediction adapters with constructed draws, analytic beta boundary masses for tiny positive kappa, reflected endpoints, independent adaptive integration, finite extreme logits and exported CSV calibration."
     ]
   },
   "earlier_model_and_numerical_checks": {
@@ -237,7 +242,8 @@
       "Available saved synthetic-fit predictions",
       "Completed score exports: score text, participant identifiers and row order"
     ],
-    "interpretation": "These comparisons verify implementation consistency; they do not establish convergence of a new production fit."
+    "interpretation": "These comparisons verify implementation consistency; they do not establish convergence of a new production fit.",
+    "A_prime_prior_equivalence_r13": "PASS: two-spline parameter draws, random-number state and linear predictors bitwise identical"
   },
   "current_distribution_checks": {
     "documentation": {
@@ -247,15 +253,14 @@
       "errors": []
     },
     "R_example_syntax": "PASS: 21 examples parsed",
-    "model_configuration_and_installation_code": "PASS: byte-identical to the audited GitHub baseline",
-    "citation": "PASS: required and allowed CFF v1.2.0 fields, repository URL, version, date, MIT license and single author checked",
+    "model_configuration_and_installation_code": "PASS: byte-identical to r13; changes to executable analysis code are confined to A-prime probability and calibration helpers",
+    "citation": "PASS: CFF v1.2.0 required and allowed fields; version and date checked; repository URL, MIT license, author and other metadata unchanged from r13",
     "file_integrity_verifier": "scripts/verify_release.R",
     "file_manifest": "RELEASE_MANIFEST.json",
     "source_manifest": "provenance/source_manifest.csv",
-    "citation_checked_on": "2026-10-25",
-    "model_formula_prior_sampling_and_primary_score_definitions": "PASS: unchanged from the audited GitHub baseline",
-    "default_A_prime_prior_equivalence": "PASS: two-spline parameter draws, random-number state and linear predictors bitwise identical",
-    "audited_GitHub_commit": "c3ce6fd1f15986d851c457f021e5700e4b6d3f84"
+    "citation_checked_on": "2026-10-28",
+    "model_formula_prior_sampling_and_primary_score_definitions": "PASS: unchanged from r13; only the numerical evaluation of A-prime probabilities and moments is revised",
+    "audited_GitHub_commit": "875b22c537e04531d7e27768dea7fc112f2cef41"
   },
   "environment": {
     "R": "4.6.1",

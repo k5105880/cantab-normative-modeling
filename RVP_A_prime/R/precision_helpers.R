@@ -3,7 +3,28 @@ normal_quadrature <- function(n) {
   stopifnot(length(n)==1L,is.finite(n),n>=2,n==as.integer(n))
   J <- matrix(0,n,n);J[cbind(seq_len(n-1),2:n)]<-sqrt(seq_len(n-1));J<-J+t(J)
   e <- eigen(J,symmetric=TRUE)
-  list(node=e$values,weight=e$vectors[1,]^2)
+  weight <- e$vectors[1,]^2
+  list(node=e$values,weight=weight/sum(weight))
+}
+
+aprime_logadd <- function(a,b) {
+  m <- pmax(a,b)
+  ans <- m+log1p(exp(-abs(a-b)))
+  ans[is.infinite(m)&m<0] <- -Inf
+  ans
+}
+aprime_logmean <- function(x) {
+  m <- max(x)
+  if(is.infinite(m)&&m<0)return(-Inf)
+  m+log(mean(exp(x-m)))
+}
+aprime_probability <- function(log_lower,log_upper) {
+  ifelse(log_lower<=log(.5),exp(log_lower),-expm1(log_upper))
+}
+aprime_normal_quantile <- function(log_lower,log_upper) {
+  # Only evaluate the smaller tail; its complement can round just above one.
+  z <- qnorm(pmin(log_lower,log_upper),log.p=TRUE)
+  ifelse(log_lower<=log_upper,z,-z)
 }
 
 random_effect_variance <- function(sd_intercept,sd_time,rho,time) {
@@ -20,9 +41,21 @@ xbeta_bounds_logit <- function(y,eta,phi,kappa) {
   # plogis(-eta) avoids cancellation in 1-plogis(eta) for positive tails.
   a<-plogis(eta)*phi;b<-plogis(-eta)*phi
   stopifnot(all(a>0),all(b>0))
-  f<-pbeta((y+kappa)/(1+2*kappa),a,b)
-  low<-high<-f;low[y==0]<-0;high[y==1]<-1
-  list(lower=low,upper=high)
+  # Evaluate both tails using the smaller beta argument, which cannot round
+  # to one when a tiny boundary width still carries substantial probability.
+  lower_half<-y<=.5
+  x<-(ifelse(lower_half,y,1-y)+kappa)/(1+2*kappa)
+  shape1<-ifelse(lower_half,a,b);shape2<-ifelse(lower_half,b,a)
+  log_cdf<-pbeta(x,shape1,shape2,log.p=TRUE)
+  log_survival<-pbeta(x,shape1,shape2,lower.tail=FALSE,log.p=TRUE)
+  ll<-ifelse(lower_half,log_cdf,log_survival)
+  lu<-ifelse(lower_half,log_survival,log_cdf)
+  lm<-rep(-Inf,n)
+  lm[y==0]<-ll[y==0];ll[y==0]<--Inf
+  lm[y==1]<-lu[y==1];lu[y==1]<--Inf
+  list(lower=aprime_probability(ll,aprime_logadd(lm,lu)),
+    upper=aprime_probability(aprime_logadd(ll,lm),lu),
+    log_lower=ll,log_mass=lm,log_upper=lu)
 }
 
 aprime_cdf_map <- function(chunks,work,workers,os_type=.Platform$OS.type) {
@@ -46,24 +79,46 @@ score_cdf_quadrature <- function(fit,data,role,nodes=c(32L,64L,128L,256L),
     nd<-data[ix,,drop=FALSE]
     pr<-brms::prepare_predictions(fit,newdata=nd,re_formula=NA,draw_ids=seq_len(N))
     rows<-lapply(seq_len(nrow(nd)),function(j) {
-      mu<-brms:::get_dpar(pr,'mu',i=j);lp<-qlogis(mu)
+      lp<-brms::get_dpar(pr,'mu',i=j,inv_link=FALSE)
       ph<-brms:::get_dpar(pr,'phi',i=j);ka<-brms:::get_dpar(pr,'kappa',i=j)
       ss<-sqrt(random_effect_variance(si,st,rho,nd$Time_since_baseline_1y[j]))
       previous<-NA_real_;error<-Inf
       for(q in seq_along(nodes)) {
-        g<-quadratures[[q]];low<-high<-numeric(N)
-        for(k in which(g$weight>1e-20)) {
+        g<-quadratures[[q]];ll<-lm<-lu<-rep(-Inf,N)
+        keep<-which(g$weight>1e-20)
+        lw<-log(g$weight[keep]/sum(g$weight[keep]))
+        for(h in seq_along(keep)) {
+          k<-keep[h]
           bounds<-xbeta_bounds_logit(nd$NM_response[j],lp+ss*g$node[k],ph,ka)
-          low<-low+g$weight[k]*bounds$lower;high<-high+g$weight[k]*bounds$upper
+          ll<-aprime_logadd(ll,lw[h]+bounds$log_lower)
+          lm<-aprime_logadd(lm,lw[h]+bounds$log_mass)
+          lu<-aprime_logadd(lu,lw[h]+bounds$log_upper)
         }
-        pd<-(low+high)/2;p<-mean(pd);z<-qnorm(p)
+        # Normalize the three disjoint events without reconstructing a tiny
+        # tail from its complement. This removes quadrature roundoff at one.
+        total<-aprime_logadd(aprime_logadd(ll,lm),lu)
+        ll<-ll-total;lm<-lm-total;lu<-lu-total
+        log_p<-aprime_logadd(ll,lm-log(2))
+        log_q<-aprime_logadd(lu,lm-log(2))
+        mean_p<-aprime_logmean(log_p);mean_q<-aprime_logmean(log_q)
+        z<-aprime_normal_quantile(mean_p,mean_q)
         if(!is.finite(z))stop('Unresolved marginal probability: row ',nd$row_id_global[j])
         if(q>1L){error<-abs(z-previous);if(error<=tolerance)break}
         previous<-z
       }
       # This includes posterior-chain Monte Carlo variation. It is not a subject-level CI.
-      mcse<-as.numeric(posterior::mcse_mean(matrix(pd,ncol=chains)))/dnorm(z)
-      data.frame(row_id_global=nd$row_id_global[j],role=role,p_lower=mean(low),p_upper=mean(high),
+      tail<-if(mean_p<=mean_q)log_p else log_q
+      scale<-max(tail);centered<-expm1(tail-scale);spread<-max(abs(centered))
+      # Center/rescale before estimating MCSE so nearly constant probabilities
+      # do not disappear in a subtraction or underflow in variance calculations.
+      se<-if(spread==0)0 else
+        as.numeric(posterior::mcse_mean(matrix(centered/spread,ncol=chains)))*spread
+      mcse<-if(isTRUE(se==0))0 else exp(log(se)+scale-dnorm(z,log=TRUE))
+      lower<-aprime_logmean(ll);mass<-aprime_logmean(lm);upper<-aprime_logmean(lu)
+      data.frame(row_id_global=nd$row_id_global[j],role=role,
+        p_lower=aprime_probability(lower,aprime_logadd(mass,upper)),
+        p_upper=aprime_probability(aprime_logadd(lower,mass),upper),
+        log_lower=lower,log_mass=mass,log_upper=upper,
         z=z,n_posterior_draws=N,quadrature_nodes=nodes[q],quadrature_z_difference=error,
         posterior_mcse_z=mcse,precision_status=if(error>tolerance)'quadrature_warning'else
           if(!is.finite(mcse)||mcse>mcse_limit)'posterior_MC_warning'else'ok')
